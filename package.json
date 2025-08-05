@@ -1,0 +1,29 @@
+{
+  "name": "projeto-dnd",
+  "private": false,
+  "version": "0.0.0",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "electron": "electron .",
+    "start": "concurrently \"npm run dev\" \"npm run electron\""
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "better-sqlite3": "^12.2.0",
+    "lodash-es": "^4.17.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@iconify/vue": "^5.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "concurrently": "^9.2.0",
+    "electron": "^37.2.5",
+    "electron-rebuild": "^3.2.9",
+    "vite": "^7.0.4"
+  }
+}
