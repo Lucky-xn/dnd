@@ -49,6 +49,26 @@
 				<IniciativeTracker :data="item" />
 			</div>
 		</div>
+
+    <div class="col-start-9 col-span-4 border-l font-semibold border-neutral-700" >
+      <div class="ml-2 flex flex-col gap-3">
+        <span class="text-white">Personagems</span>
+        <div v-for="item in allCharacters" :key="item.nome" class="flex items-center justify-between gap-2 text-white text-sm bg-neutral-800 border border-neutral-700 rounded-md px-2 py-1">
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-0.5">
+              <span class="text-xs text-gray-500">Nome:</span>
+              <span>{{ item.nome }}</span>
+            </div>
+            <div class="flex items-center gap-0.5">
+              <span class="text-xs items-center text-gray-500">CA:</span>
+              <span>{{ item.ca }}</span>
+            </div>
+          </div>
+          <button class="bg-blue-600 rounded-md px-4 h-6">Add</button>
+        </div>
+      </div>
+    </div>
+
 	</div>
 </template>
 
@@ -62,6 +82,8 @@ const ca = ref(null);
 const notas = ref('');
 
 const persons = ref([]);
+
+const allCharacters = ref([]);
 
 const add = () => {
 	persons.value.push({
@@ -79,9 +101,9 @@ const add = () => {
 const filteredPersons = computed(() => {
 	return persons.value.sort((a, b) => b.iniciativa - a.iniciativa);
 });
+// await window.api.addPersonagem({ nome: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
 
 onMounted(async () => {
-  await window.api.addPersonagem({ nome: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
-  console.log(await window.api.getPersonagens())
+  allCharacters.value = await window.api.getPersonagens();
 })
 </script>
