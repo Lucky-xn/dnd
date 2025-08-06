@@ -1,0 +1,117 @@
+/* src/assets/tailwind.css */
+@import 'tailwindcss';
+
+/* @font-face {
+  font-family: "San Francisco";
+  font-weight: 400;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff");
+} */
+
+@layer base {
+  input:focus {
+    @apply outline-none ring-0;
+  }
+  textarea:focus {
+    @apply outline-none ring-0;
+  }
+}
+
+/* Remove spinners dos inputs numéricos */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield !important; /* Firefox */
+  appearance: none !important; /* Padrão moderno */
+}
+
+td {
+  padding: 0.357rem 0.5rem;
+}
+/* 
+:deep(.bordered td) {
+  border: 1px solid #4b5563 !important;
+  padding: 0.5rem 0.5rem;
+} */
+
+/* Scrollbar personalizada - Webkit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  overflow-y: overlay;
+}
+
+*::-webkit-scrollbar-track {
+  background: #27272a;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 10px;
+  border: 2px solid #27272a;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 #27272a;
+  /* scrollbar-gutter: stable; */
+}
+
+body {
+  font-family: 'Mukta', sans-serif;
+  font-size: 16px;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* 
+html {
+  scrollbar-gutter: stable;
+} */
+
+/* button {
+  cursor: pointer;
+} */
+
+/* Datepicker dark theme customizações */
+.dp__overlay_cell_disabled {
+  background-color: #ffffff15 !important;
+  color: #ffffff25 !important;
+}
+
+.dp__theme_dark * {
+  --dp-background-color: transparent;
+  --dp-hover-icon-color: #d6d6d6;
+  --dp-hover-text-color: #ffffff;
+  --dp-text-color: #b6b6b6;
+  --dp-primary-color: #6366f1;
+  --dp-primary-text-color: #303174;
+  --dp-border-color: transparent;
+  --dp-menu-border-color: transparent;
+  --dp-border-color-hover: transparent;
+  --dp-border-color-focus: transparent;
+}
+
+.dp__menu {
+  background: rgba(38, 38, 38, 0.7) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+}
+
+.dp__overlay .dp--overlay-absolute {
+  background: #212223 !important;
+}
+
+.dp__instance_calendar .dp--overlay-absolute {
+  background: #212223 !important;
+}

@@ -1,33 +1,45 @@
 <template>
 	<div class="grid grid-cols-12 gap-4 p-4 w-full h-full">
-
 		<div class="grid grid-rows-[auto auto auto auto 1fr] gap-4 col-span-3">
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Nome:</label>
-				<input class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: Aseir" v-model="nome" type="text" />
+				<input
+					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
+					placeholder="Ex: Aseir"
+					v-model="nome"
+					type="text"
+				/>
 			</div>
 
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Iniciativa:</label>
-				<input class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: 21" v-model="iniciativa" type="number" />
+				<input
+					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
+					placeholder="Ex: 21"
+					v-model="iniciativa"
+					type="number"
+				/>
 			</div>
 
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Classe de Armadura:</label>
-				<input class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: 15" v-model="ca" type="number" />
+				<input
+					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
+					placeholder="Ex: 15"
+					v-model="ca"
+					type="number"
+				/>
 			</div>
 
-			<button class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded"
-				@click="add">Novo</button>
+			<button class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded" @click="add">Novo</button>
 
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Anotações:</label>
 				<textarea
 					class="border border-neutral-700 rounded-md bg-neutral-800 text-white px-2 py-1 h-100 resize-none text-sm"
-					placeholder="Ex: Fazer um tpk dentro dessa Sessão." v-model="notas"></textarea>
+					placeholder="Ex: Fazer um tpk dentro dessa Sessão."
+					v-model="notas"
+				></textarea>
 			</div>
 		</div>
 
@@ -40,8 +52,11 @@
 		<div class="col-start-9 col-span-4 border-l font-semibold border-neutral-700">
 			<div class="ml-2 flex flex-col gap-3">
 				<span class="text-white">Personagems</span>
-				<div v-for="item in allCharacters" :key="item.nome"
-					class="flex items-center justify-between gap-2 text-white text-sm bg-neutral-800 border border-neutral-700 rounded-md px-2 py-1">
+				<div
+					v-for="item in allCharacters"
+					:key="item.nome"
+					class="flex items-center justify-between gap-2 text-white text-sm bg-neutral-800 border border-neutral-700 rounded-md px-2 py-1"
+				>
 					<div class="flex items-center gap-2">
 						<div class="flex items-center gap-0.5">
 							<span class="text-xs text-gray-500">Nome:</span>
@@ -56,7 +71,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </template>
 
@@ -93,5 +107,5 @@ const filteredPersons = computed(() => {
 
 onMounted(async () => {
 	allCharacters.value = await window.api.getPersonagens();
-})
+});
 </script>
