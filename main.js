@@ -1,11 +1,11 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { app, BrowserWindow } from "electron";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
-import './src/app/headlers/personagens.js';
+import "./src/app/headlers/personagens.js";
 
-import initDB from './src/app/db/slqite.js';
+import initDB from "./src/app/db/slqite.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,11 +17,11 @@ function createWindow() {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
-  win.loadURL('http://localhost:5173');
+  win.loadURL("http://localhost:5173");
   win.webContents.openDevTools();
 }
 
