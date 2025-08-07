@@ -46,6 +46,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
 	data: {

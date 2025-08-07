@@ -15,7 +15,11 @@
 				<div class="text-xs text-gray-500">Data: {{ data.created_at }}</div>
 			</div>
 		</div>
-		<button class="bg-blue-600 hover:bg-blue-600 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3">Sheet</button>
+		<router-link :to="`/Personagens/${data.id}`">
+			<button class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3 transition-colors">
+				Sheet
+			</button>
+		</router-link>
 	</div>
 </template>
 

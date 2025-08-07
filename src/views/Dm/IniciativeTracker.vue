@@ -15,14 +15,24 @@
 
 				<div class="flex flex-col gap-1">
 					<label class="font-semibold text-gray-600 text-xs">Iniciative:</label>
-					<input
-						class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-						placeholder="Ex: 21"
-						required
-						v-model="iniciative"
-						min="1"
-						type="number"
-					/>
+					<div class="flex gap-2">
+						<input
+							class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm flex-1"
+							placeholder="Ex: 21"
+							required
+							v-model="iniciative"
+							min="1"
+							type="number"
+						/>
+						<button 
+							type="button" 
+							@click="rollInitiative"
+							class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md text-xs transition-colors"
+							title="Rolar d20"
+						>
+							d20
+						</button>
+					</div>
 				</div>
 
 				<div class="flex gap-3 min-w-0">
@@ -57,7 +67,7 @@
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Notes:</label>
 				<textarea
-					class="border border-neutral-700 rounded-md bg-neutral-800 text-white px-2 py-1 h-100 resize-none text-sm"
+					class="border border-neutral-700 rounded-md bg-neutral-800 text-white px-2 py-1 h-20 resize-none text-sm"
 					placeholder="Ex: Fazer um tpk dentro dessa Sessão."
 					v-model="notes"
 				></textarea>
@@ -65,12 +75,21 @@
 		</div>
 
 		<div class="col-start-4 col-span-3 flex flex-col gap-3 max-h-[43rem] overflow-auto">
+			<div class="flex items-center justify-between">
+				<h2 class="text-white font-semibold">Ordem de Iniciativa</h2>
+				<button 
+					@click="clearBattle"
+					class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs transition-colors"
+				>
+					Limpar Batalha
+				</button>
+			</div>
 			<div v-for="item in filteredPersons" :key="item.iniciative">
 				<IniciativeCard :data="item" />
 			</div>
 		</div>
 
-		<div class="col-start-9 col-span-4 border-l font-semibold border-neutral-700">
+		<div class="col-start-7 col-span-3 border-l font-semibold border-neutral-700">
 			<div class="ml-2 flex flex-col gap-3">
 				<span class="text-white">Characters</span>
 				<div
@@ -88,9 +107,18 @@
 							<span>{{ item.ca }}</span>
 						</div>
 					</div>
-					<button class="bg-blue-600 rounded-md px-4 h-6">Add</button>
+					<button 
+						@click="addCharacterToBattle(item)"
+						class="bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-md px-4 h-6"
+					>
+						Add
+					</button>
 				</div>
 			</div>
+		</div>
+
+		<div class="col-start-10 col-span-3">
+			<DiceRoller ref="diceRoller" />
 		</div>
 	</div>
 </template>
@@ -98,6 +126,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import IniciativeCard from '../../components/IniciativeCard.vue';
+import DiceRoller from '../../components/DiceRoller.vue';
 
 const name = ref('');
 const iniciative = ref(null);
@@ -107,6 +136,7 @@ const notes = ref('');
 
 const persons = ref([]);
 const allCharacters = ref([]);
+const diceRoller = ref(null);
 
 const add = () => {
 	persons.value.push({
@@ -122,11 +152,30 @@ const add = () => {
 	hp.value = null;
 };
 
+const addCharacterToBattle = (character) => {
+	const initiative = Math.floor(Math.random() * 20) + 1; // Random initiative for now
+	persons.value.push({
+		name: character.name,
+		iniciative: initiative,
+		ca: character.ca || 10, // Use character's CA or default to 10
+		hp: character.hp || 20,  // Use character's HP or default to 20
+	});
+};
+
+const rollInitiative = () => {
+	if (diceRoller.value) {
+		const result = diceRoller.value.rollDice(20);
+		iniciative.value = result;
+	}
+};
+
+const clearBattle = () => {
+	persons.value = [];
+};
+
 const filteredPersons = computed(() => {
 	return persons.value.sort((a, b) => b.iniciative - a.iniciative);
 });
-
-// await window.api.addNewCharacter({ name: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
 
 onMounted(async () => {
 	allCharacters.value = await window.api.listAllCharacters();

@@ -10,14 +10,14 @@
 			</span>
 			<span
 				class="text-white font-semibold text-sm hover:text-purple-500 transition-all duration-300 cursor-pointer">
-				<router-link to="/Persongens">
+				<router-link to="/Personagens">
 					Personagens
 				</router-link>
 			</span>
 			<span
 				class="text-white font-semibold text-sm hover:text-purple-500 transition-all duration-300 cursor-pointer">
 				<router-link to="/Campanha/Batalhas">
-					Teste
+					Batalhas
 				</router-link>
 			</span>
 		</div>
@@ -27,5 +27,5 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
-
+import { Icon } from '@iconify/vue';
 </script>
