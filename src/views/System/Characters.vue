@@ -6,14 +6,15 @@
 			</button>
 		</div>
 		<div class="w-full grid grid-cols-12 gap-4 p-3">
-			<CharacterCard class="col-span-3" v-for="item in characters" :data="item" :key="item.id" @character-updated="getAllCharacters" />
+			<CharacterCard class="col-span-3" v-for="item in characters" :data="item" :key="item.id" />
 		</div>
-		<ModalNewCharacter :showModal="showModal" @update:close="closeModal" @character-created="onCharacterCreated" />
+		<ModalNewCharacter :showModal="showModal" @update:close="closeModal" @update:newCharacter="getAllCharacters()" />
 	</div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
+
 import ModalNewCharacter from '../../components/Personagens/ModalNewCharacter.vue';
 import CharacterCard from '../../components/Personagens/CharacterCard.vue';
 
@@ -22,8 +23,8 @@ const characters = ref([]);
 
 async function getAllCharacters() {
 	try {
+		characters.value = null;
 		characters.value = await window.api.listAllCharacters();
-		console.log('Characters fetched successfully:', characters.value);
 	} catch (error) {
 		console.error('Error fetching characters: ', error);
 	}
@@ -31,11 +32,6 @@ async function getAllCharacters() {
 
 const closeModal = () => {
 	showModal.value = false;
-};
-
-const onCharacterCreated = () => {
-	getAllCharacters(); // Refresh the character list
-	closeModal();
 };
 
 onMounted(async () => {

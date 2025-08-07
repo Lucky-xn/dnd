@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<router-link :to="`/Personagens/${data.id}`">
-			<button class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3 transition-colors">
+			<button class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3 transition-all duration-300">
 				Sheet
 			</button>
 		</router-link>
@@ -24,15 +24,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Icon } from '@iconify/vue';
-
 const props = defineProps({
 	data: {
 		type: Object,
 		default: () => {},
 	},
 });
-
-// TODO: colocar um atributto on click para jogar para a pargina de personagem
 </script>
