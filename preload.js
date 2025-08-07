@@ -4,5 +4,6 @@ contextBridge.exposeInMainWorld('api', {
   addNewCharacter: (p) => ipcRenderer.invoke('add-character', p),
   listAllCharacters: () => ipcRenderer.invoke('list-characters'),
 
-  selectFile: () => ipcRenderer.invoke('select-image'),
+  selectImg: () => ipcRenderer.invoke('select-image'),
+  deleteImg: (p) => ipcRenderer.invoke('delete-image', p),
 });

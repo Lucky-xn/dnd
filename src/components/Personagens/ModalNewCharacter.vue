@@ -2,8 +2,8 @@
 	<Transition name="modal">
 		<div
 			v-if="showModal"
-			@click.self="emit('updade:close')"
-			@keydown.esc="emit('update:close')"
+			@click.self="closeAndDeleteImage"
+			@keydown.esc="closeAndDeleteImage"
 			class="bg-black/20 backdrop-blur-xs z-10 fixed w-full h-full inset-0"
 		>
 			<form
@@ -48,9 +48,9 @@
 </template>
 
 <script setup>
-import { ref, Transition, defineEmits } from 'vue';
+import { ref, defineEmits } from 'vue';
 
-const emit = defineEmits('updade:close');
+const emit = defineEmits(['update:close']);
 
 const img = ref('');
 const name = ref('');
@@ -66,9 +66,22 @@ const props = defineProps({
 });
 
 const selectImage = async () => {
-	img.value = await window.api.selectFile();
-	console.log(img);
+	img.value = await window.api.selectImg();
 };
+
+const closeAndDeleteImage = () => {
+  emit('update:close');
+  deleteImage(img.value);
+}
+
+const deleteImage = async (path) => {
+	try {
+		console.log(await window.api.deleteImg(path));
+		img.value = '';
+	} catch (error) {
+		console.error('Error deleting image: ', error);
+	}
+}
 
 const createCharacter = () => {
 	try {

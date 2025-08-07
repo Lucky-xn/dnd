@@ -20,7 +20,8 @@ export default function initDB() {
       name TEXT,
       race TEXT,
       class TEXT,
-      origin TEXT
+      origin TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`).run();
 
     db.prepare(`CREATE TABLE IF NOT EXISTS characters_sheet (
@@ -28,11 +29,6 @@ export default function initDB() {
       character_id INTEGER,
       level INTEGER,
       hp INTEGER,
-      img TEXT,
-      name TEXT,
-      race TEXT,
-      class TEXT,
-      origin TEXT,
       strength INTEGER,
       dexterity INTEGER,
       constitution INTEGER,

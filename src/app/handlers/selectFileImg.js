@@ -1,8 +1,8 @@
 import { ipcMain, dialog, app } from 'electron';
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
-// Pasta segura no sistema do usuário
 const DESTINY = path.join(app.getPath('userData'), 'Characters');
 
 ipcMain.handle('select-image', async () => {
@@ -18,11 +18,26 @@ ipcMain.handle('select-image', async () => {
   }
 
   const selectedFile = result.filePaths[0];
-  const fileName = path.basename(selectedFile);
+  const ext = path.extname(selectedFile);
+  const fileName = `${uuidv4()}${ext}`;
   const destiny = path.join(DESTINY, fileName);
 
   fs.mkdirSync(DESTINY, { recursive: true });
   fs.copyFileSync(selectedFile, destiny);
 
-  return `file://${path.join(DESTINY, fileName)}`;
+  return `file://${destiny}`;
 });
+
+ipcMain.handle('delete-image', async (event, filePath) => {
+  try {
+    const actualPath = filePath.startsWith('file://') ? filePath.replace('file://', '') : filePath;
+
+    if (fs.existsSync(actualPath)) {
+      fs.unlinkSync(actualPath);
+    }
+    return true;
+  } catch (error) {
+    console.error('Error deleting image: ', error);
+    return false;
+  }
+})

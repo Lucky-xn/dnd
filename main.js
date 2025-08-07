@@ -5,8 +5,8 @@ import { dirname } from "path";
 import path from "path";
 import initDB from "./src/app/db/sqlite.js";
 
-import "./src/app/hendlers/characters.js";
-import "./src/app/hendlers/selectFileImg.js";
+import "./src/app/handlers/characters.js";
+import "./src/app/handlers/selectFileImg.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
