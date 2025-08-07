@@ -50,7 +50,6 @@
 import { ref, Transition, defineEmits } from 'vue';
 
 const image = ref('');
-
 const emit = defineEmits('updade:close');
 
 const props = defineProps({

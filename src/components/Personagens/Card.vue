@@ -7,14 +7,14 @@
             </div>
             <div class="flex flex-col h-[100%] justify-center gap-4">
                 <div class="flex flex-col">
-                    <span class="text-xl cursor-pointer">{{ data.nome }}</span>
-                    <span class="text-sm">{{ data.classe }} - {{ data.raca }}</span>
+                    <span class="text-xl cursor-pointer">{{ data.name }}</span>
+                    <span class="text-sm">{{ data.class }} - {{ data.race }}</span>
                 </div>
-                <div class="text-xs text-gray-500">Data: {{ data.data }}</div>
+                <div class="text-xs text-gray-500">Data: {{ data.created_at }}</div>
             </div>
         </div>
         <button
-            class="bg-blue-600 hover:bg-blue-600 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3">Ficha</button>
+            class="bg-blue-600 hover:bg-blue-600 cursor-pointer text-sm px-7 h-6 rounded-md mb-3 mr-3">Sheet</button>
     </div>
 
 </template>

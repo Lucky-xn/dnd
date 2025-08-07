@@ -7,14 +7,14 @@
                 Personagem</button>
         </div>
         <div class="w-full p-3">
-        <ModalNewPersonagem :showModal="showModal" @updade:close="showModal = false" />
+        <ModalNewCharacter :showModal="showModal" @updade:close="showModal = false" />
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import ModalNewPersonagem from '../../components/Personagens/ModalNewPersonagem.vue';
+import ModalNewCharacter from '../../components/Personagens/ModalNewCharacter.vue';
 
 const showModal = ref(false)
 </script>
