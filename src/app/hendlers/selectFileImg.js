@@ -3,9 +3,9 @@ import fs from 'fs';
 import path from 'path';
 
 // Pasta segura no sistema do usuário
-const DESTINO = path.join(app.getPath('userData'), 'Characters');
+const DESTINY = path.join(app.getPath('userData'), 'Characters');
 
-ipcMain.handle('selecionar-arquivo', async () => {
+ipcMain.handle('select-image', async () => {
   const result = await dialog.showOpenDialog({
     properties: ['openFile'],
     filters: [
@@ -17,12 +17,12 @@ ipcMain.handle('selecionar-arquivo', async () => {
     return null;
   }
 
-  const arquivoSelecionado = result.filePaths[0];
-  const nomeArquivo = path.basename(arquivoSelecionado);
-  const destino = path.join(DESTINO, nomeArquivo);
+  const selectedFile = result.filePaths[0];
+  const fileName = path.basename(selectedFile);
+  const destiny = path.join(DESTINY, fileName);
 
-  fs.mkdirSync(DESTINO, { recursive: true });
-  fs.copyFileSync(arquivoSelecionado, destino);
+  fs.mkdirSync(DESTINY, { recursive: true });
+  fs.copyFileSync(selectedFile, destiny);
 
-  return `file://${path.join(DESTINO, nomeArquivo)}`;
+  return `file://${path.join(DESTINY, fileName)}`;
 });

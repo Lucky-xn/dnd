@@ -10,15 +10,15 @@ export default function initDB() {
   
     db.prepare(`CREATE TABLE IF NOT EXISTS itens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
+      name TEXT,
       quantidade INTEGER
     )`).run();
   
-    db.prepare(`CREATE TABLE IF NOT EXISTS personagens (
+    db.prepare(`CREATE TABLE IF NOT EXISTS characters (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
+      name TEXT,
       hp INTEGER,
-      raca TEXT,
+      race TEXT,
       ca INTEGER
     )`).run();
 

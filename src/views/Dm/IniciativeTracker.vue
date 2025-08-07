@@ -2,27 +2,27 @@
 	<div class="grid grid-cols-12 gap-4 p-4 w-full h-full">
 		<div class="grid grid-rows-[auto auto auto auto 1fr] gap-4 col-span-3">
 			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Nome:</label>
+				<label class="font-semibold text-gray-600 text-xs">Name:</label>
 				<input
 					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
 					placeholder="Ex: Aseir"
-					v-model="nome"
+					v-model="name"
 					type="text"
 				/>
 			</div>
 
 			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Iniciativa:</label>
+				<label class="font-semibold text-gray-600 text-xs">Iniciative:</label>
 				<input
 					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
 					placeholder="Ex: 21"
-					v-model="iniciativa"
+					v-model="iniciative"
 					type="number"
 				/>
 			</div>
 
 			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Classe de Armadura:</label>
+				<label class="font-semibold text-gray-600 text-xs">CA:</label>
 				<input
 					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
 					placeholder="Ex: 15"
@@ -31,36 +31,36 @@
 				/>
 			</div>
 
-			<button class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded" @click="add">Novo</button>
+			<button class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded" @click="add">New</button>
 
 			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Anotações:</label>
+				<label class="font-semibold text-gray-600 text-xs">Notes:</label>
 				<textarea
 					class="border border-neutral-700 rounded-md bg-neutral-800 text-white px-2 py-1 h-100 resize-none text-sm"
 					placeholder="Ex: Fazer um tpk dentro dessa Sessão."
-					v-model="notas"
+					v-model="notes"
 				></textarea>
 			</div>
 		</div>
 
 		<div class="col-span-3 flex flex-col gap-3 max-h-[43rem] overflow-auto">
-			<div v-for="item in filteredPersons" :key="item.iniciativa">
+			<div v-for="item in filteredPersons" :key="item.iniciative">
 				<IniciativeTracker :data="item" />
 			</div>
 		</div>
 
 		<div class="col-start-9 col-span-4 border-l font-semibold border-neutral-700">
 			<div class="ml-2 flex flex-col gap-3">
-				<span class="text-white">Personagems</span>
+				<span class="text-white">Characters</span>
 				<div
 					v-for="item in allCharacters"
-					:key="item.nome"
+					:key="item.name"
 					class="flex items-center justify-between gap-2 text-white text-sm bg-neutral-800 border border-neutral-700 rounded-md px-2 py-1"
 				>
 					<div class="flex items-center gap-2">
 						<div class="flex items-center gap-0.5">
-							<span class="text-xs text-gray-500">Nome:</span>
-							<span>{{ item.nome }}</span>
+							<span class="text-xs text-gray-500">Name:</span>
+							<span>{{ item.name }}</span>
 						</div>
 						<div class="flex items-center gap-0.5">
 							<span class="text-xs items-center text-gray-500">CA:</span>
@@ -78,32 +78,32 @@
 import { computed, onMounted, ref } from 'vue';
 import IniciativeTracker from '../../components/IniciativeCard.vue';
 
-const nome = ref('');
-const iniciativa = ref(null);
+const name = ref('');
+const iniciative = ref(null);
 const ca = ref(null);
-const notas = ref('');
+const notes = ref('');
 
 const persons = ref([]);
 const allCharacters = ref([]);
 
 const add = () => {
 	persons.value.push({
-		nome: nome.value,
-		iniciativa: iniciativa.value,
+		name: name.value,
+		iniciative: iniciative.value,
 		ca: ca.value,
-		vida: 30,
+		hp: 30,
 	});
 
-	nome.value = '';
-	iniciativa.value = null;
+	name.value = '';
+	iniciative.value = null;
 	ca.value = null;
 };
 
 const filteredPersons = computed(() => {
-	return persons.value.sort((a, b) => b.iniciativa - a.iniciativa);
+	return persons.value.sort((a, b) => b.iniciative - a.iniciative);
 });
 
-// await window.api.addNewCharacter({ nome: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
+// await window.api.addNewCharacter({ name: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
 
 onMounted(async () => {
 	allCharacters.value = await window.api.listAllCharacters();

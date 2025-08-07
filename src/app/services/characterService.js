@@ -3,7 +3,7 @@ import { getDB } from "../db/sqlite.js";
 export function addCharacter(personagem) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO personagens (nome, hp, raca, ca) 
+    INSERT INTO characters (name, hp, race, ca) 
     VALUES (@nome, @hp, @raca, @ca)
   `);
   const info = stmt.run(personagem);
@@ -13,7 +13,7 @@ export function addCharacter(personagem) {
 export function getAllCharacters() {
   const db = getDB();
   const stmt = db.prepare(`
-    SELECT * FROM personagens
+    SELECT * FROM characters
   `);
   return stmt.all();
 }
