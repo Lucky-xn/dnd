@@ -16,10 +16,30 @@ export default function initDB() {
   
     db.prepare(`CREATE TABLE IF NOT EXISTS characters (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      img TEXT,
       name TEXT,
-      hp INTEGER,
       race TEXT,
-      ca INTEGER
+      class TEXT,
+      origin TEXT
+    )`).run();
+
+    db.prepare(`CREATE TABLE IF NOT EXISTS characters_sheet (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      character_id INTEGER,
+      level INTEGER,
+      hp INTEGER,
+      img TEXT,
+      name TEXT,
+      race TEXT,
+      class TEXT,
+      origin TEXT,
+      strength INTEGER,
+      dexterity INTEGER,
+      constitution INTEGER,
+      intelligence INTEGER,
+      wisdom INTEGER,
+      charisma INTEGER,
+      FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE
     )`).run();
 
     return db;
