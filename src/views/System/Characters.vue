@@ -6,9 +6,9 @@
 			</button>
 		</div>
 		<div class="w-full grid grid-cols-12 gap-4 p-3">
-			<CharacterCard class="col-span-3" v-for="item in characters" :data="item" :key="item.id" />
+			<CharacterCard class="col-span-3" v-for="item in characters" :data="item" :key="item.id" @character-updated="getAllCharacters" />
 		</div>
-		<ModalNewCharacter :showModal="showModal" @update:close="showModal = false" />
+		<ModalNewCharacter :showModal="showModal" @update:close="closeModal" @character-created="onCharacterCreated" />
 	</div>
 </template>
 
@@ -28,6 +28,15 @@ async function getAllCharacters() {
 		console.error('Error fetching characters: ', error);
 	}
 }
+
+const closeModal = () => {
+	showModal.value = false;
+};
+
+const onCharacterCreated = () => {
+	getAllCharacters(); // Refresh the character list
+	closeModal();
+};
 
 onMounted(async () => {
 	await getAllCharacters();

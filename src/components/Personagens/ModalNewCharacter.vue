@@ -96,7 +96,7 @@
 import { ref, defineEmits } from 'vue';
 import { Icon } from '@iconify/vue';
 
-const emit = defineEmits(['update:close']);
+const emit = defineEmits(['update:close', 'character-created']);
 
 const img = ref('');
 const name = ref('');
@@ -140,9 +140,26 @@ const deleteImage = async (path) => {
 	}
 }
 
-const createCharacter = () => {
+const resetForm = () => {
+	img.value = '';
+	name.value = '';
+	race.value = '';
+	characterClass.value = '';
+	origin.value = '';
+	hp.value = 20;
+	ca.value = 10;
+	level.value = 1;
+	str.value = 10;
+	dex.value = 10;
+	con.value = 10;
+	int.value = 10;
+	wis.value = 10;
+	cha.value = 10;
+};
+
+const createCharacter = async () => {
 	try {
-		window.api.addNewCharacter({
+		await window.api.addNewCharacter({
 			img: img.value,
 			name: name.value,
 			race: race.value,
@@ -159,23 +176,8 @@ const createCharacter = () => {
 			cha: cha.value,
 		});
 		
-		// Reset form
-		img.value = '';
-		name.value = '';
-		race.value = '';
-		characterClass.value = '';
-		origin.value = '';
-		hp.value = 20;
-		ca.value = 10;
-		level.value = 1;
-		str.value = 10;
-		dex.value = 10;
-		con.value = 10;
-		int.value = 10;
-		wis.value = 10;
-		cha.value = 10;
-		
-		emit('update:close');
+		resetForm();
+		emit('character-created');
 	} catch (error) {
 		console.error('Error adding character: ', error);
 	}

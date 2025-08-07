@@ -177,7 +177,11 @@ const filteredPersons = computed(() => {
 	return persons.value.sort((a, b) => b.iniciative - a.iniciative);
 });
 
-onMounted(async () => {
+const loadCharacters = async () => {
 	allCharacters.value = await window.api.listAllCharacters();
+};
+
+onMounted(async () => {
+	await loadCharacters();
 });
 </script>
