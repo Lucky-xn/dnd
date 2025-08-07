@@ -1,4 +1,4 @@
-import { addCharacter, getAllCharacters } from "../services/characterService";
+import { addCharacter, getAllCharacters } from "../services/characterService.js";
 
 export async function addNewCharacter(data) {
   // Aqui você valida os dados...

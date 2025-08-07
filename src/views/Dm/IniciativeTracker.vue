@@ -1,37 +1,58 @@
 <template>
 	<div class="grid grid-cols-12 gap-4 p-4 w-full h-full">
-		<div class="grid grid-rows-[auto auto auto auto 1fr] gap-4 col-span-3">
-			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Name:</label>
-				<input
-					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: Aseir"
-					v-model="name"
-					type="text"
-				/>
-			</div>
+		<div class="flex flex-col gap-3 col-span-3">
+			<form @submit.prevent="add" class="flex flex-col gap-3">
+				<div class="flex flex-col gap-1">
+					<label class="font-semibold text-gray-600 text-xs">Name:</label>
+					<input
+						class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
+						placeholder="Ex: Aseir"
+						required
+						v-model="name"
+						type="text"
+					/>
+				</div>
 
-			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">Iniciative:</label>
-				<input
-					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: 21"
-					v-model="iniciative"
-					type="number"
-				/>
-			</div>
+				<div class="flex flex-col gap-1">
+					<label class="font-semibold text-gray-600 text-xs">Iniciative:</label>
+					<input
+						class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
+						placeholder="Ex: 21"
+						required
+						v-model="iniciative"
+						min="1"
+						type="number"
+					/>
+				</div>
 
-			<div class="flex flex-col gap-1">
-				<label class="font-semibold text-gray-600 text-xs">CA:</label>
-				<input
-					class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm"
-					placeholder="Ex: 15"
-					v-model="ca"
-					type="number"
-				/>
-			</div>
+				<div class="flex gap-3 min-w-0">
+					<div class="flex flex-col gap-1 w-full">
+						<label class="font-semibold text-gray-600 text-xs">CA:</label>
+						<input
+							class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm w-full"
+							placeholder="Ex: 15"
+							required
+							v-model="ca"
+							min="1"
+							type="number"
+						/>
+					</div>
 
-			<button class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded" @click="add">New</button>
+					<div class="flex flex-col gap-1 w-full">
+						<label class="font-semibold text-gray-600 text-xs">Hp:</label>
+						<input
+							class="border border-neutral-700 px-2 py-1 text-white rounded-md bg-neutral-800 text-sm w-full"
+							placeholder="Ex: 17"
+							required
+							v-model="hp"
+							min="1"
+							type="number"
+						/>
+					</div>
+				</div>
+
+				<button type="submit" class="bg-blue-700 hover:bg-blue-800 cursor-pointer text-sm text-white font-semibold py-1 rounded">New</button>
+			</form>
 
 			<div class="flex flex-col gap-1">
 				<label class="font-semibold text-gray-600 text-xs">Notes:</label>
@@ -43,9 +64,9 @@
 			</div>
 		</div>
 
-		<div class="col-span-3 flex flex-col gap-3 max-h-[43rem] overflow-auto">
+		<div class="col-start-4 col-span-3 flex flex-col gap-3 max-h-[43rem] overflow-auto">
 			<div v-for="item in filteredPersons" :key="item.iniciative">
-				<IniciativeTracker :data="item" />
+				<IniciativeCard :data="item" />
 			</div>
 		</div>
 
@@ -76,11 +97,12 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import IniciativeTracker from '../../components/IniciativeCard.vue';
+import IniciativeCard from '../../components/IniciativeCard.vue';
 
 const name = ref('');
 const iniciative = ref(null);
 const ca = ref(null);
+const hp = ref(null);
 const notes = ref('');
 
 const persons = ref([]);
@@ -91,12 +113,13 @@ const add = () => {
 		name: name.value,
 		iniciative: iniciative.value,
 		ca: ca.value,
-		hp: 30,
+		hp: hp.value,
 	});
 
 	name.value = '';
 	iniciative.value = null;
 	ca.value = null;
+	hp.value = null;
 };
 
 const filteredPersons = computed(() => {
