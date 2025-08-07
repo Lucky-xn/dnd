@@ -1,8 +1,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  addPersonagem: (p) => ipcRenderer.invoke('add-personagem', p),
-  getPersonagens: () => ipcRenderer.invoke('get-personagens'),
+  addNewCharacter: (p) => ipcRenderer.invoke('add-character', p),
+  listAllCharacters: () => ipcRenderer.invoke('list-characters'),
 
   selecionarArquivo: () => ipcRenderer.invoke('selecionar-arquivo'),
 });

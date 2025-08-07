@@ -1,6 +1,6 @@
-import { getDB } from "../db/slqite.js";
+import { getDB } from "../db/sqlite.js";
 
-export function insertPersonagem(personagem) {
+export function addCharacter(personagem) {
   const db = getDB();
   const stmt = db.prepare(`
     INSERT INTO personagens (nome, hp, raca, ca) 
@@ -10,7 +10,7 @@ export function insertPersonagem(personagem) {
   return info.lastInsertRowid;
 }
 
-export function getAllPersonagens() {
+export function getAllCharacters() {
   const db = getDB();
   const stmt = db.prepare(`
     SELECT * FROM personagens

@@ -84,7 +84,6 @@ const ca = ref(null);
 const notas = ref('');
 
 const persons = ref([]);
-
 const allCharacters = ref([]);
 
 const add = () => {
@@ -103,9 +102,10 @@ const add = () => {
 const filteredPersons = computed(() => {
 	return persons.value.sort((a, b) => b.iniciativa - a.iniciativa);
 });
-// await window.api.addPersonagem({ nome: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
+
+// await window.api.addNewCharacter({ nome: 'Teste da Silva', hp: 30, raca: 'Humano', ca: 12 });
 
 onMounted(async () => {
-	allCharacters.value = await window.api.getPersonagens();
+	allCharacters.value = await window.api.listAllCharacters();
 });
 </script>
