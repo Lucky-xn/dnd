@@ -7,8 +7,6 @@ export function seedInitialData(db) {
       const systemCount = db.prepare(`SELECT COUNT(*) as count FROM sistems`).get().count;
 
       if (systemCount === 0) {
-        console.log("No systems found, seeding initial data...");
-
         const dndSystem = db.prepare(`INSERT INTO sistems (name, description) VALUES (?, ?)`)
           .run(['Dungeons and Dragons', 'Dnd 5e Edition']);
 

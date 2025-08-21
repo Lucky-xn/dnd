@@ -10,7 +10,7 @@
     "dev": "vite",
     "electron": "electron .",
     "start": "concurrently \"npm run dev\" \"npm run electron\"",
-    "prepare": "husky",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": "eslint --fix"
