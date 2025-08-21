@@ -2,32 +2,21 @@
   <Transition name="modal">
     <div
       v-if="showModal"
-      @click.self="closeAndDeleteImage"
-      @keydown.esc="closeAndDeleteImage"
+      @click.self="cancel = true"
+      @keydown.esc="cancel = true"
       class="bg-black/20 backdrop-blur-xs z-10 fixed w-full h-full inset-0"
     >
       <form
         @submit.prevent="createCharacter"
         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid grid-cols-6 grid-rows-4 gap-3 w-[33rem] h-[15rem] bg-neutral-900 text-white text-sm font-semibold border border-neutral-700 rounded-md p-2"
       >
-        <div class="col-span-2 row-span-2 rounded-md relative group">
-          <img
-            :src="img"
-            alt=""
-            class="w-full h-full rounded-md object-cover transition duration-300 brightness-100 group-hover:brightness-75"
-          />
-          <div
-            @click="selectImage"
-            class="absolute inset-0 flex items-center cursor-pointer border-1 rounded-md border-neutral-700 border-dashed justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
-          >
-            <div
-              class="flex gap-2 items-center bg-neutral-200/30 rounded-md p-1"
-            >
-              <Icon icon="solar:pen-new-round-bold-duotone" class="h-5 w-5" />
-              <span class="text-xs text-neutral-200">Editar Imagem</span>
-            </div>
-          </div>
-        </div>
+        <ImageManegement
+          class="col-span-2 row-span-2"
+          :cancel="cancel"
+          @update:img="img = $event"
+          @update:cancel="closeAndDeleteImage"
+        />
+
         <div class="col-span-4 flex items-center justify-center">
           <h2 class="text-lg font-bold">Criação de Personagem</h2>
         </div>
@@ -83,7 +72,9 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { defineEmits, ref } from "vue";
+
+import ImageManegement from "../../components/ui/ImageManegement.vue";
 
 const emit = defineEmits(["update:close", "update:newCharacter"]);
 
@@ -92,30 +83,21 @@ const name = ref("");
 const race = ref("");
 const characterClass = ref("");
 const origin = ref("");
+const cancel = ref(false);
 
-defineProps({
+const props = defineProps({
   showModal: {
     type: Boolean,
     default: false,
   },
 });
 
-const selectImage = async () => {
-  img.value = await window.api.selectImg();
-};
-
 const closeAndDeleteImage = () => {
+  setTimeout(() => {
+    cancel.value = false;
+  }, 100);
+  resetForm();
   emit("update:close");
-  deleteImage(img.value);
-};
-
-const deleteImage = async (path) => {
-  try {
-    console.log(await window.api.deleteImg(path));
-    img.value = "";
-  } catch (error) {
-    console.error("Error deleting image: ", error);
-  }
 };
 
 const resetForm = () => {
@@ -124,6 +106,7 @@ const resetForm = () => {
   race.value = "";
   characterClass.value = "";
   origin.value = "";
+  cancel.value = false;
 };
 
 const createCharacter = async () => {
@@ -138,6 +121,7 @@ const createCharacter = async () => {
 
     resetForm();
     emit("update:newCharacter");
+    emit("update:close");
   } catch (error) {
     console.error("Error adding character: ", error);
   }
