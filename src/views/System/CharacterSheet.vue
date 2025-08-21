@@ -97,8 +97,11 @@
             :key="skill.name"
             class="flex my-1 justify-between"
           >
-            <div class="flex items-center gap-2">
-              <input type="checkbox" class="accent-purple-600" />
+            <div class="flex items-center gap-1">
+              <input
+                type="checkbox"
+                class="accent-purple-600 w-2 h-2 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
+              />
               <div class="flex items-center gap-1">
                 <Icon
                   icon="fa-solid:dice-d20"
@@ -115,12 +118,14 @@
       </div>
 
       <div class="row-start-2 h-[20rem] col-start-5 col-span-4 grid grid-cols-4 gap-3">
-        <MenageStats :title="'CA'" class="" />
-        <MenageStats :title="'Max HP'" />
-        <MenageStats :title="'Iniciative'" />
-        <MenageStats :title="'Mov'" />
+        <div class="col-span-4 flex gap-3 h-25">
+          <MenageStats :title="'CA'" />
+          <MenageStats :title="'Max HP'" />
+          <MenageStats :title="'Iniciative'" />
+          <MenageStats :title="'Mov'" />
+        </div>
         <div
-          class="col-span-4 row-start-2 flex flex-col bg-neutral-800 border border-neutral-700 rounded-md p-2"
+          class="col-span-4 row-start-2 flex flex-col gap-2 bg-neutral-800 border border-neutral-700 rounded-md p-2"
         >
           <span class="font-semibold flex items-center justify-center text-xl">Hp</span>
           <div class="flex items-center justify-center h-full">
@@ -134,38 +139,42 @@
           <span class="font-semibold text-xl">Teste de Morte</span>
           <div class="flex items-center justify-center h-full">
             <div class="flex gap-5">
-              <div class="flex flex-col items-center gap-1 border border-neutral-700 rounded-md px-9 py-2">
+              <div
+                class="flex flex-col items-center gap-1 border border-neutral-700 rounded-md px-9 py-2"
+              >
                 <span>Falhas</span>
                 <div class="flex gap-4">
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                 </div>
               </div>
               x
-              <div class="flex flex-col items-center gap-1 border border-neutral-700 rounded-md px-9 py-2">
+              <div
+                class="flex flex-col items-center gap-1 border border-neutral-700 rounded-md px-9 py-2"
+              >
                 <span>Sucesso</span>
                 <div class="flex gap-4">
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                   <input
                     type="checkbox"
-                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600 checked:border-purple-700 transition-all duration-300"
+                    class="accent-purple-600 w-5 h-5 rounded-full appearance-none border-1 border-purple-600 checked:bg-purple-600"
                   />
                 </div>
               </div>

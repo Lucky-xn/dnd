@@ -85,7 +85,7 @@ const characterClass = ref("");
 const origin = ref("");
 const cancel = ref(false);
 
-const props = defineProps({
+defineProps({
   showModal: {
     type: Boolean,
     default: false,
