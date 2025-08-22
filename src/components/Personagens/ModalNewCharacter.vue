@@ -2,9 +2,10 @@
   <Transition name="modal">
     <div
       v-if="showModal"
-      @click.self="cancel = true"
-      @keydown.esc="cancel = true"
+      @click.self="closeModal"
+      @keydown.esc="closeModal"
       class="bg-black/20 backdrop-blur-xs z-10 fixed w-full h-full inset-0"
+      tabindex="0"
     >
       <div
         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col w-[50rem] h-[25rem] bg-neutral-900 text-white text-sm font-semibold border border-neutral-700 rounded-md"
@@ -41,6 +42,7 @@
               />
               <Step2Image 
                 v-else-if="currentStep === 2"
+                :img="formData.img"
                 :cancel="cancel"
                 @update:img="formData.img = $event"
                 @update:cancel="closeAndDeleteImage"
@@ -92,7 +94,7 @@
 </template>
 
 <script setup>
-import { defineEmits, onMounted, ref, computed, watch } from "vue";
+import { defineEmits, onMounted, ref, computed, watch, nextTick } from "vue";
 
 import Step1Core from "./Steps/Step1Core.vue";
 import Step2Image from "./Steps/Step2Image.vue";
@@ -118,7 +120,7 @@ const formData = ref({
   characterClass: "",
 });
 
-defineProps({
+const props = defineProps({
   showModal: {
     type: Boolean,
     default: false,
@@ -157,6 +159,11 @@ const previousStep = () => {
     slideDirection.value = 'slide-right';
     currentStep.value--;
   }
+};
+
+const closeModal = () => {
+  resetForm();
+  emit("update:close");
 };
 
 const closeAndDeleteImage = () => {
@@ -229,6 +236,15 @@ watch(() => formData.value.showModal, (newVal) => {
 
 onMounted(() => {
   getData();
+});
+
+// Focus modal when it opens for keyboard events
+watch(() => props.showModal, async (newVal) => {
+  if (newVal) {
+    await nextTick();
+    // Focus the modal container for keyboard events
+    document.querySelector('.bg-black\\/20')?.focus();
+  }
 });
 </script>
 
