@@ -26,7 +26,7 @@ const api = {
   },
   attribute: {
     create: (data) => invoke('attribute:create', data),
-    list: (systemId) => invoke('attribute:list', { systemId }),
+    list: (systemId) => invoke('attribute:list', systemId),
     get: (id) => invoke('attribute:get', { id }),
     update: (id, data) => invoke('attribute:update', { id, ...data }),
     remove: (id) => invoke('attribute:remove', { id }),
@@ -62,7 +62,7 @@ const api = {
   characterSheet: {
     create: (data) => invoke('characterSheet:create', data),
     list: () => invoke('characterSheet:list'),
-    get: (id) => invoke('characterSheet:get', { id }),
+    get: (id) => invoke('characterSheet:get', id),
     update: (id, data) => invoke('characterSheet:update', { id, ...data }),
     remove: (id) => invoke('characterSheet:remove', { id }),
   },

@@ -3,12 +3,13 @@
     <img
       :src="img"
       alt=""
-      class="w-full h-full rounded-md object-contain transition duration-300 brightness-100 group-hover:brightness-75"
+      class="w-full h-full rounded-md object-contain transition duration-300 brightness-100 group-hover:brightness-75 max-w-[48rem] max-h-[12rem]"
       :class="{ 'bg-neutral-800': !img }"
     />
     <div
-      @click="openImageSelector"
+      @click="showPopup = true"
       class="absolute inset-0 flex items-center cursor-pointer border-1 rounded-md border-neutral-700 border-dashed justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
+      :class="{ 'max-w-[48rem] max-h-[12rem]': modalIntegration }"
     >
       <div
         v-if="!isSmall && !modalIntegration"
@@ -27,7 +28,6 @@
       <Icon v-else icon="mdi:lead-pencil" class="h-5 w-5" />
     </div>
 
-    <!-- Image Selection Popup -->
     <Transition name="popup">
       <div
         v-if="showPopup"
@@ -50,7 +50,10 @@
           </button>
 
           <div class="text-center">
-            <Icon icon="mdi:cloud-upload" class="h-12 w-12 text-neutral-400 mx-auto mb-2" />
+            <Icon
+              icon="mdi:cloud-upload"
+              class="h-12 w-12 text-neutral-400 mx-auto mb-2"
+            />
             <p class="text-white font-medium mb-1">Arraste uma imagem aqui</p>
             <p class="text-neutral-400 text-sm">ou</p>
           </div>
@@ -104,14 +107,6 @@ const showPopup = ref(false);
 const isDragging = ref(false);
 const fileInput = ref(null);
 
-const openImageSelector = () => {
-  if (props.modalIntegration) {
-    showPopup.value = true;
-  } else {
-    selectImage();
-  }
-};
-
 const closePopup = () => {
   showPopup.value = false;
   isDragging.value = false;
@@ -122,38 +117,29 @@ const selectImage = async () => {
   emit("update:img", img.value);
 };
 
-const selectImageFile = () => {
-  fileInput.value?.click();
+const selectImageFile = async () => {
+  img.value = await window.api.images.select();
+  closePopup();
 };
 
 const handleFileSelect = async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    await processImageFile(file);
-  }
+  img.value = await window.api.images.select();
 };
 
 const handleDrop = async (event) => {
-  isDragging.value = false;
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    const file = files[0];
-    if (file.type.startsWith('image/')) {
-      await processImageFile(file);
-    }
-  }
+  // isDragging.value = false;
+  // const files = event.dataTransfer.files;
+  // if (files.length > 0) {
+  //   const file = files[0];
+  //   if (file.type.startsWith("image/")) {
+  //     await processImageFile(file);
+  //   }
+  // }
 };
 
 const processImageFile = async (file) => {
   try {
-    // Create a file path or use the existing window.api method
-    // For now, we'll use the existing API which might handle file objects
-    if (window.api.images.processFile) {
-      img.value = await window.api.images.processFile(file);
-    } else {
-      // Fallback: create object URL for preview (temporary solution)
-      img.value = URL.createObjectURL(file);
-    }
+    img.value = await window.api.images.select();
     emit("update:img", img.value);
     closePopup();
   } catch (error) {
@@ -171,13 +157,11 @@ const deleteImage = async (path) => {
   }
 };
 
-// Handle drag events
 const handleDragEnter = () => {
-  isDragging.value = true;
+  // isDragging.value = true;
 };
 
 const handleDragLeave = (event) => {
-  // Only set to false if we're leaving the drop zone completely
   if (!event.currentTarget.contains(event.relatedTarget)) {
     isDragging.value = false;
   }

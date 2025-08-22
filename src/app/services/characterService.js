@@ -1,7 +1,7 @@
 import { getDB } from "../db/sqlite.js";
 
 const defaultCharacter = {
-  sistem_id: 1,
+  system_id: 1,
   img: null,
   name: null,
   race: null,
@@ -36,8 +36,8 @@ export function addCharacter(character) {
   const createCharacter = db.transaction((char) => {
     const newCharacter = { ...defaultCharacter, ...char };
     const stmtCharacterInfo = db.prepare(`
-        INSERT INTO characters (sistem_id, img, name, race, class, origin, alignment, hp) 
-        VALUES (@sistem_id, @img, @name, @race, @class, @origin, @alignment, @hp)
+        INSERT INTO characters (system_id, img, name, race, class, origin, alignment, hp) 
+        VALUES (@system_id, @img, @name, @race, @class, @origin, @alignment, @hp)
       `);
     const info = stmtCharacterInfo.run(newCharacter);
     const characterId = info.lastInsertRowid;

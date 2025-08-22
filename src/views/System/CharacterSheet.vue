@@ -57,28 +57,7 @@
         </div>
       </div>
 
-      <!-- <div
-        class="row-start-2 flex flex-col items-center gap-3 bg-neutral-800 border border-neutral-700 rounded-md py-2"
-      >
-        <span class="font-semibold"> Atributos </span>
-        <div
-          v-for="(ability, key) in Attributes"
-          :key="key"
-          class="w-full text-center px-1"
-        >
-          <div class="flex flex-col border border-neutral-600 rounded-md">
-            <div class="text-sm text-gray-400">
-              {{ formatModifier(character[key]) }}
-            </div>
-            <div class="text-2xl font-bold">{{ character[key] || 0 }}</div>
-            <div class="text-sm font-semibold text-gray-300">
-              {{ ability.name }}
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <AttributeSheet :attributes="attributes"/>
+      <AttributeSheet :default-attributes="attributes" :characters-attributes="character.attributes"/>
 
       <div
         class="col-start-2 col-span-3 text-sm flex flex-col bg-neutral-800 border border-neutral-700 rounded-md"
@@ -113,8 +92,9 @@
               </div>
             </div>
             <span class="font-medium">{{
-              formatModifier(getSkillModifier(skill.ability))
+              '+0'
             }}</span>
+            <!-- formatModifier(getSkillModifier(skill.ability)) -->
           </div>
         </div>
       </div>
@@ -227,12 +207,6 @@ const skills = [
   { name: "Sobrevivência", ability: "wis" },
 ];
 
-const formatModifier = (score) => {
-  if (score === undefined || score === null) return "+0";
-  const modifier = Math.floor((score - 10) / 2);
-  return modifier >= 0 ? `+${modifier}` : modifier.toString();
-};
-
 const getSkillModifier = (ability) => {
   return character.value ? character.value[ability] || 10 : 10;
 };
@@ -240,10 +214,9 @@ const getSkillModifier = (ability) => {
 const loadCharacter = async () => {
   try {
     const result = await window.api.characterSheet.get(route.params.id);
-    console.log("Character loaded:", result);
     character.value = result.info;
     characterAttributes.value = result.attributes;
-    attributes.value = await window.api.attributes.list(character.value.system_id);
+    attributes.value = await window.api.attribute.list(character.value.system_id) || [];
   } catch (error) {
     console.error("Error loading character:", error);
   }
