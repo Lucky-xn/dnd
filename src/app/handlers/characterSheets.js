@@ -5,11 +5,11 @@ ipcMain.handle('add-character-sheet', async (event, data) => {
   return characterSheetApi.addNewCharacterSheet(data);
 });
 
-ipcMain.handle('get-character-sheet', async (event, characterId) => {
+ipcMain.handle('characterSheet:get', async (event, characterId) => {
   return characterSheetApi.getSheet(characterId);
 });
 
-ipcMain.handle('update-character-sheet', async (event, characterId, data) => {
+ipcMain.handle('characterSheet:update', async (event, characterId, data) => {
   return characterSheetApi.updateSheet(characterId, data);
 });
 
