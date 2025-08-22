@@ -28,10 +28,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-
-const showInputChange = ref(false);
-const inputRef = ref(null);
+import { computed } from 'vue';
 
 const props = defineProps({
   defaultAttributes: {
@@ -57,16 +54,5 @@ const filteredDefaultAttributes = computed(() => {
 const filteredCharactersAttributes = computed(() => {
    return Array.isArray(props.charactersAttributes) ? props.charactersAttributes : []
 })
-
-const handleEditClick = async () => {
-  showInputChange.value = true;
-  await nextTick();
-  inputRef.value?.focus();
-};
-
-const cancelEdit = () => {
-  defaultStatus.value = props.stats;
-  showInputChange.value = false;
-};
 
 </script>

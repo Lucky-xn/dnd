@@ -174,11 +174,11 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
+import AttributeSheet from "../../components/Personagens/AttributeSheet.vue";
 import ImageManegement from "../../components/ui/ImageManegement.vue";
 import LifeMenagement from "../../components/ui/LifeMenagement.vue";
 import ListItems from "../../components/ui/Sheet/ListItems.vue";
 import MenageStats from "../../components/ui/Sheet/MenageStats.vue";
-import AttributeSheet from "../../components/Personagens/AttributeSheet.vue";
 
 const route = useRoute();
 
@@ -207,9 +207,6 @@ const skills = [
   { name: "Sobrevivência", ability: "wis" },
 ];
 
-const getSkillModifier = (ability) => {
-  return character.value ? character.value[ability] || 10 : 10;
-};
 
 const loadCharacter = async () => {
   try {

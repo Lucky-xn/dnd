@@ -112,39 +112,19 @@ const closePopup = () => {
   isDragging.value = false;
 };
 
-const selectImage = async () => {
-  img.value = await window.api.images.select();
-  emit("update:img", img.value);
-};
+
 
 const selectImageFile = async () => {
   img.value = await window.api.images.select();
   closePopup();
 };
 
-const handleFileSelect = async (event) => {
+const handleFileSelect = async () => {
   img.value = await window.api.images.select();
 };
 
-const handleDrop = async (event) => {
-  // isDragging.value = false;
-  // const files = event.dataTransfer.files;
-  // if (files.length > 0) {
-  //   const file = files[0];
-  //   if (file.type.startsWith("image/")) {
-  //     await processImageFile(file);
-  //   }
-  // }
-};
 
-const processImageFile = async (file) => {
-  try {
-    img.value = await window.api.images.select();
-    emit("update:img", img.value);
-    closePopup();
-  } catch (error) {
-    console.error("Error processing image file:", error);
-  }
+const handleDrop = async () => {
 };
 
 const deleteImage = async (path) => {
@@ -158,7 +138,6 @@ const deleteImage = async (path) => {
 };
 
 const handleDragEnter = () => {
-  // isDragging.value = true;
 };
 
 const handleDragLeave = (event) => {
