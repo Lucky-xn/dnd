@@ -7,6 +7,11 @@ import initDB from "./src/app/db/sqlite.js";
 
 import "./src/app/handlers/characters.js";
 import "./src/app/handlers/selectFileImg.js";
+import "./src/app/handlers/systems.js";
+import "./src/app/handlers/attributes.js";
+import "./src/app/handlers/skills.js";
+import "./src/app/handlers/items.js";
+import "./src/app/handlers/characterSheets.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

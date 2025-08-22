@@ -2,8 +2,8 @@ import Database from "better-sqlite3";
 import path from 'path';
 import { app } from "electron";
 
-import { createSchema } from "./schema";
-import { seedInitialData } from "./seed";
+import { createSchema } from "./schema.js";
+import { seedInitialData } from "./seed.js";
 
 let db;
 
