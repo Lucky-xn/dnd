@@ -211,6 +211,12 @@ const getData = async () => {
     console.log("Systems fetched: ", systems.value);
   } catch (error) {
     console.error("Error fetching systems: ", error);
+    // Add default systems for testing when API is not available
+    systems.value = [
+      { id: 1, name: "D&D 5E" },
+      { id: 2, name: "Pathfinder" },
+      { id: 3, name: "Call of Cthulhu" }
+    ];
   }
 }
 
