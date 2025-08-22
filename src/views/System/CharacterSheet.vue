@@ -242,7 +242,7 @@ const getSkillModifier = (ability) => {
 
 const loadCharacter = async () => {
   try {
-    const characters = await window.api.listAllCharacters();
+    const characters = await window.api.characters.list();
     character.value = characters.find((c) => c.id == route.params.id);
   } catch (error) {
     console.error("Error loading character:", error);

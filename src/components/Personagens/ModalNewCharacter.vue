@@ -111,7 +111,7 @@ const resetForm = () => {
 
 const createCharacter = async () => {
   try {
-    await window.api.addNewCharacter({
+    await window.api.characters.create({
       img: img.value,
       name: name.value,
       race: race.value,

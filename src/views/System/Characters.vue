@@ -41,7 +41,7 @@ const characters = ref([]);
 async function getAllCharacters() {
   try {
     characters.value = null;
-    characters.value = await window.api.listAllCharacters();
+    characters.value = await window.api.characters.list();
   } catch (error) {
     console.error("Error fetching characters: ", error);
   }

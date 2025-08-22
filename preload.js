@@ -1,56 +1,78 @@
 /* global require */
 const { contextBridge, ipcRenderer } = require('electron');
 
+async function invoke(channel, payload) {
+  try {
+    const res = await ipcRenderer.invoke(channel, payload);
+    if (res && res.error) {
+      throw Object.assign(new Error(res.error?.message || 'Unknown error'), { code: res.error?.code})
+    }
+    return res?.data ?? res;
+  } catch (err) {
+    console.error('[ipc error]', channel, err);
+    throw err;
+  }
+}
+
+const api = {
+  system: {
+    create: (data) => invoke('system:create', data),
+    list: () => invoke('system:list'),
+    get: (id) => invoke('system:get', { id }),
+    update: (id, data) => invoke('system:update', { id, ...data }),
+    remove: (id) => invoke('system:remove', { id }),
+    listAttributes: (id) => invoke('system:listAttributes', { id }),
+    listSkills: (id) => invoke('system:listSkills', { id }),
+  },
+  attribute: {
+    create: (data) => invoke('attribute:create', data),
+    list: () => invoke('attribute:list'),
+    get: (id) => invoke('attribute:get', { id }),
+    update: (id, data) => invoke('attribute:update', { id, ...data }),
+    remove: (id) => invoke('attribute:remove', { id }),
+    link: (attributeId, systemId) => invoke('attribute:link', { attributeId, systemId }),
+    unlink: (attributeId, systemId) => invoke('attribute:unlink', { attributeId, systemId }),
+  },
+  skill: {
+    create: (data) => invoke('skill:create', data),
+    list: () => invoke('skill:list'),
+    get: (id) => invoke('skill:get', { id }),
+    update: (id, data) => invoke('skill:update', { id, ...data }),
+    remove: (id) => invoke('skill:remove', { id }),
+    link: (skillId, systemId) => invoke('skill:link', { skillId, systemId }),
+    unlink: (skillId, systemId) => invoke('skill:unlink', { skillId, systemId }),
+  },
+  items: {
+    create: (data) => invoke('items:create', data),
+    list: () => invoke('items:list'),
+    get: (id) => invoke('items:get', { id }),
+    update: (id, data) => invoke('items:update', { id, ...data }),
+    remove: (id) => invoke('items:remove', { id }),
+  },
+  characters: {
+    create: (data) => invoke('characters:create', data),
+    list: () => invoke('characters:list'),
+    get: (id) => invoke('characters:get', { id }),
+    update: (id, data) => invoke('characters:update', { id, ...data }),
+    remove: (id) => invoke('characters:remove', { id }),
+    listInventory: (id) => invoke('characters:listInventory', { id }),
+    addItem: (characterId, itemId) => invoke('characters:addItem', { characterId, itemId }),
+    removeItem: (characterId, itemId) => invoke('characters:removeItem', { characterId, itemId }),
+  },
+  characterSheet: {
+    create: (data) => invoke('characterSheet:create', data),
+    list: () => invoke('characterSheet:list'),
+    get: (id) => invoke('characterSheet:get', { id }),
+    update: (id, data) => invoke('characterSheet:update', { id, ...data }),
+    remove: (id) => invoke('characterSheet:remove', { id }),
+  },
+  images: {
+    select: () => invoke('images:select'),
+    delete: (path) => invoke('images:delete', { path }),
+  }
+}
+
+
 contextBridge.exposeInMainWorld('api', {
-  // Characters
-  addNewCharacter: (p) => ipcRenderer.invoke('add-character', p),
-  listAllCharacters: () => ipcRenderer.invoke('list-characters'),
-
-  // Images
-  selectImg: () => ipcRenderer.invoke('select-image'),
-  deleteImg: (p) => ipcRenderer.invoke('delete-image', p),
-
-  // Systems
-  addNewSystem: (p) => ipcRenderer.invoke('add-system', p),
-  listAllSystems: () => ipcRenderer.invoke('list-systems'),
-  getSystem: (id) => ipcRenderer.invoke('get-system', id),
-  updateSystem: (id, p) => ipcRenderer.invoke('update-system', id, p),
-  deleteSystem: (id) => ipcRenderer.invoke('delete-system', id),
-
-  // Attributes
-  addNewAttribute: (p) => ipcRenderer.invoke('add-attribute', p),
-  listAllAttributes: () => ipcRenderer.invoke('list-attributes'),
-  getAttribute: (id) => ipcRenderer.invoke('get-attribute', id),
-  updateAttribute: (id, p) => ipcRenderer.invoke('update-attribute', id, p),
-  deleteAttribute: (id) => ipcRenderer.invoke('delete-attribute', id),
-  getSystemAttributes: (systemId) => ipcRenderer.invoke('get-system-attributes', systemId),
-  linkAttribute: (attributeId, systemId) => ipcRenderer.invoke('link-attribute', attributeId, systemId),
-  unlinkAttribute: (attributeId, systemId) => ipcRenderer.invoke('unlink-attribute', attributeId, systemId),
-
-  // Skills
-  addNewSkill: (p) => ipcRenderer.invoke('add-skill', p),
-  listAllSkills: () => ipcRenderer.invoke('list-skills'),
-  getSkill: (id) => ipcRenderer.invoke('get-skill', id),
-  updateSkill: (id, p) => ipcRenderer.invoke('update-skill', id, p),
-  deleteSkill: (id) => ipcRenderer.invoke('delete-skill', id),
-  getSystemSkills: (systemId) => ipcRenderer.invoke('get-system-skills', systemId),
-  linkSkill: (skillId, systemId) => ipcRenderer.invoke('link-skill', skillId, systemId),
-  unlinkSkill: (skillId, systemId) => ipcRenderer.invoke('unlink-skill', skillId, systemId),
-
-  // Items
-  addNewItem: (p) => ipcRenderer.invoke('add-item', p),
-  listAllItems: () => ipcRenderer.invoke('list-items'),
-  getItem: (id) => ipcRenderer.invoke('get-item', id),
-  updateItem: (id, p) => ipcRenderer.invoke('update-item', id, p),
-  deleteItem: (id) => ipcRenderer.invoke('delete-item', id),
-  getInventory: (characterId) => ipcRenderer.invoke('get-inventory', characterId),
-  addToInventory: (characterId, itemId) => ipcRenderer.invoke('add-to-inventory', characterId, itemId),
-  removeFromInventory: (characterId, itemId) => ipcRenderer.invoke('remove-from-inventory', characterId, itemId),
-
-  // Character Sheets
-  addNewCharacterSheet: (p) => ipcRenderer.invoke('add-character-sheet', p),
-  getCharacterSheet: (characterId) => ipcRenderer.invoke('get-character-sheet', characterId),
-  updateCharacterSheet: (characterId, p) => ipcRenderer.invoke('update-character-sheet', characterId, p),
-  deleteCharacterSheet: (characterId) => ipcRenderer.invoke('delete-character-sheet', characterId),
-  listAllCharacterSheets: () => ipcRenderer.invoke('list-character-sheets'),
+  ...api,
 });
