@@ -12,18 +12,20 @@ export function addCharacterSheet(characterSheet) {
 export function getCharacterSheet(characterId) {
   const db = getDB();
   const stmtPrincipalInfo = db.prepare(`
-    SELECT c.id, c.system_id, c.image, c.name, c.class, c.race, c.origin, c.alignment, cs.level, c.hp, cs.current_hp FROM characters_sheet cs
+    SELECT c.id, c.system_id, c.img, c.name, c.class, c.race, c.origin, c.alignment, cs.level, c.hp, cs.current_hp FROM characters_sheet cs
     JOIN characters c ON cs.character_id = c.id
     WHERE c.id = ?
   `);
 
   const stmtAttributes = db.prepare(`
-    SELECT a.name, a.value FROM character_attributes a
-    JOIN characters_sheet cs ON a.character_sheet_id = cs.id
-    WHERE cs.character_id = ?
+    SELECT a2.name, a.value
+    FROM characters_attributes a
+    JOIN attributes a2 ON a.attribute_id = a2.id
+    WHERE a.character_id = ?
   `);
 
-  const data = [{ 'info': stmtPrincipalInfo.get(characterId), 'attributes': stmtAttributes.all(characterId) }];
+  const data = { info: stmtPrincipalInfo.get(characterId), attributes: stmtAttributes.all(characterId) };
+  // const data = { 'info': stmtPrincipalInfo.get(characterId)};
 
   return data;
 }

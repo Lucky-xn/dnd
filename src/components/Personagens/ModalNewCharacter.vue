@@ -2,134 +2,169 @@
   <Transition name="modal">
     <div
       v-if="showModal"
-      @click.self="cancel = true"
-      @keydown.esc="cancel = true"
+      @click.self="closeModal"
+      @keydown.esc="closeModal"
       class="bg-black/20 backdrop-blur-xs z-10 fixed w-full h-full inset-0"
+      tabindex="0"
     >
-      <form
-        @submit.prevent="createCharacter"
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-3 w-[50rem] h-[20rem] bg-neutral-900 text-white text-sm font-semibold border border-neutral-700 rounded-md"
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col w-[50rem] h-[25rem] bg-neutral-900 text-white text-sm font-semibold border border-neutral-700 rounded-md"
       >
-        <span class="flex items-center justify-center border-b border-neutral-700 text-lg py-2 font-bold">Criação de Personagem</span>
-
-        <div class="flex items-end gap-2 h-full px-2">
-          <ImageManegement
-            class="flex-1"
-            :cancel="cancel"
-            @update:img="img = $event"
-            @update:cancel="closeAndDeleteImage"
-          />
-  
-          <div class="flex flex-col justify-between h-full flex-1/2 gap-2">
-          <div class="flex flex-col">
-            <span class="text-gray-500">System:</span>
-            <select v-model="systemSelected" class="border border-neutral-700 px-2 py-1 rounded-md bg-neutral-800" placeholder="ex:. D&D 5E" required>
-              <option v-for="sys in systems" :key="sys.id" :value="sys.name">{{ sys.name }}</option>
-            </select>
+        <!-- Header with title and step indicator -->
+        <div class="flex items-center justify-between border-b border-neutral-700 px-4 py-3">
+          <span class="text-lg font-bold">Criação de Personagem</span>
+          <div class="flex items-center gap-2">
+            <div 
+              v-for="step in 3" 
+              :key="step"
+              class="w-2 h-2 rounded-full transition-colors duration-300"
+              :class="step <= currentStep ? 'bg-blue-500' : 'bg-neutral-600'"
+            ></div>
           </div>
-            <div class="flex gap-2">
-              <div class="flex flex-1 flex-col">
-                <span class="text-gray-500">Name:</span>
-                <input
-                  type="text"
-                  placeholder="ex:. Asylan"
-                  v-model="name"
-                  class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-                  required
-                />
-              </div>
-              <div class="flex flex-col w-15">
-                <span class="text-gray-500">Lv:</span>
-                <input
-                  type="number"
-                  v-model="level"
-                  class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flex gap-2 px-2">
-          <div class="flex flex-1 flex-col">
-            <span class="text-gray-500">Race:</span>
-            <input
-              type="text"
-              placeholder="ex:. Human"
-              v-model="race"
-              class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-              required
-            />
-          </div>
-          <div class="flex flex-1 flex-col">
-            <span class="text-gray-500">Class:</span>
-            <input
-              type="text"
-              placeholder="ex:. Bard"
-              v-model="characterClass"
-              class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-              required
-            />
-          </div>
-          <div class="flex flex-col">
-            <span class="text-gray-500">Origin:</span>
-            <input
-              type="text"
-              placeholder="ex:. Hero"
-              v-model="origin"
-              class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-              required
-            />
-          </div>
-        <div class=" flex flex-col">
-          <span class="text-gray-500">Alignment:</span>
-          <input
-            type="text"
-            v-model="alignment"
-            placeholder="ex:. Chaotic Good"
-            class="border border-neutral-700 placeholder:font-normal px-2 py-1 rounded-md bg-neutral-800"
-            required
-          />
-        </div>
         </div>
 
-        <div class="flex items-center justify-center pb-2">
-          <button
-            type="submit"
-            class="bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-md px-5 h-7 items-center cursor-pointer"
+        <!-- Step content with slide animation -->
+        <div class="flex-1 relative overflow-hidden">
+          <Transition 
+            :name="slideDirection" 
+            mode="out-in"
+            @before-enter="isAnimating = true"
+            @after-enter="isAnimating = false"
           >
-            Adicionar
+            <div :key="currentStep" class="absolute inset-0 p-4">
+              <Step1Core 
+                v-if="currentStep === 1"
+                :formData="formData"
+                :systems="systems"
+                @update:systemSelected="formData.systemSelected = $event"
+                @update:name="formData.name = $event"
+                @update:level="formData.level = $event"
+              />
+              <Step2Image 
+                v-else-if="currentStep === 2"
+                :img="formData.img"
+                :cancel="cancel"
+                @update:img="formData.img = $event"
+                @update:cancel="closeAndDeleteImage"
+              />
+              <Step3Additional 
+                v-else-if="currentStep === 3"
+                :formData="formData"
+                @update:race="formData.race = $event"
+                @update:characterClass="formData.characterClass = $event"
+                @update:origin="formData.origin = $event"
+                @update:alignment="formData.alignment = $event"
+              />
+            </div>
+          </Transition>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="flex items-center justify-between border-t border-neutral-700 px-4 py-3">
+          <button
+            v-if="currentStep > 1"
+            @click="previousStep"
+            :disabled="isAnimating"
+            class="bg-neutral-700 hover:bg-neutral-600 transition-all duration-300 rounded-md px-5 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Voltar
+          </button>
+          <div v-else></div>
+
+          <button
+            v-if="currentStep < 3"
+            @click="nextStep"
+            :disabled="isAnimating || !isCurrentStepValid"
+            class="bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-md px-5 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Continuar
+          </button>
+          <button
+            v-else
+            @click="createCharacter"
+            :disabled="isAnimating || !isCurrentStepValid"
+            class="bg-green-600 hover:bg-green-700 transition-all duration-300 rounded-md px-5 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Criar Personagem
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </Transition>
 </template>
 
 <script setup>
-import { defineEmits, onMounted, ref } from "vue";
+import { defineEmits, onMounted, ref, computed, watch, nextTick } from "vue";
 
-import ImageManegement from "../../components/ui/ImageManegement.vue";
+import Step1Core from "./Steps/Step1Core.vue";
+import Step2Image from "./Steps/Step2Image.vue";
+import Step3Additional from "./Steps/Step3Additional.vue";
 
 const emit = defineEmits(["update:close", "update:newCharacter"]);
 
 const systems = ref([]);
-const systemSelected = ref("");
-const img = ref("");
-const name = ref("");
-const race = ref("");
-const origin = ref("");
-const alignment = ref("");
-const level = ref(1);
-const characterClass = ref("");
 const cancel = ref(false);
+const currentStep = ref(1);
+const slideDirection = ref('slide-left');
+const isAnimating = ref(false);
 
-defineProps({
+// Centralized form data
+const formData = ref({
+  systemSelected: "",
+  img: "",
+  name: "",
+  race: "",
+  origin: "",
+  alignment: "",
+  level: 1,
+  characterClass: "",
+});
+
+const props = defineProps({
   showModal: {
     type: Boolean,
     default: false,
   },
 });
+
+// Step validation logic
+const isCurrentStepValid = computed(() => {
+  switch (currentStep.value) {
+    case 1:
+      return formData.value.systemSelected && 
+             formData.value.name && 
+             formData.value.level > 0;
+    case 2:
+      return true; // Image is optional
+    case 3:
+      return formData.value.race && 
+             formData.value.characterClass && 
+             formData.value.origin && 
+             formData.value.alignment;
+    default:
+      return false;
+  }
+});
+
+// Navigation functions
+const nextStep = () => {
+  if (currentStep.value < 3 && isCurrentStepValid.value && !isAnimating.value) {
+    slideDirection.value = 'slide-left';
+    currentStep.value++;
+  }
+};
+
+const previousStep = () => {
+  if (currentStep.value > 1 && !isAnimating.value) {
+    slideDirection.value = 'slide-right';
+    currentStep.value--;
+  }
+};
+
+const closeModal = () => {
+  resetForm();
+  emit("update:close");
+};
 
 const closeAndDeleteImage = () => {
   setTimeout(() => {
@@ -140,22 +175,33 @@ const closeAndDeleteImage = () => {
 };
 
 const resetForm = () => {
-  img.value = "";
-  name.value = "";
-  race.value = "";
-  characterClass.value = "";
-  origin.value = "";
+  formData.value = {
+    systemSelected: "",
+    img: "",
+    name: "",
+    race: "",
+    origin: "",
+    alignment: "",
+    level: 1,
+    characterClass: "",
+  };
+  currentStep.value = 1;
   cancel.value = false;
 };
 
 const createCharacter = async () => {
+  if (!isCurrentStepValid.value) return;
+  
   try {
     await window.api.characters.create({
-      img: img.value,
-      name: name.value,
-      race: race.value,
-      origin: origin.value,
-      class: characterClass.value,
+      img: formData.value.img,
+      name: formData.value.name,
+      race: formData.value.race,
+      origin: formData.value.origin,
+      class: formData.value.characterClass,
+      system: formData.value.systemSelected,
+      level: formData.value.level,
+      alignment: formData.value.alignment,
     });
 
     resetForm();
@@ -172,11 +218,33 @@ const getData = async () => {
     console.log("Systems fetched: ", systems.value);
   } catch (error) {
     console.error("Error fetching systems: ", error);
+    // Add default systems for testing when API is not available
+    systems.value = [
+      { id: 1, name: "D&D 5E" },
+      { id: 2, name: "Pathfinder" },
+      { id: 3, name: "Call of Cthulhu" }
+    ];
   }
 }
 
+// Reset form when modal closes
+watch(() => formData.value.showModal, (newVal) => {
+  if (!newVal) {
+    resetForm();
+  }
+});
+
 onMounted(() => {
   getData();
+});
+
+// Focus modal when it opens for keyboard events
+watch(() => props.showModal, async (newVal) => {
+  if (newVal) {
+    await nextTick();
+    // Focus the modal container for keyboard events
+    document.querySelector('.bg-black\\/20')?.focus();
+  }
 });
 </script>
 
@@ -188,6 +256,34 @@ onMounted(() => {
 
 .modal-enter-from,
 .modal-leave-to {
+  opacity: 0;
+}
+
+/* Slide transitions */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.slide-left-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
   opacity: 0;
 }
 </style>
