@@ -212,6 +212,7 @@ const loadCharacter = async () => {
   try {
     const result = await window.api.characterSheet.get(route.params.id);
     character.value = result.info;
+    console.log("Character loaded:", character.value);
     characterAttributes.value = result.attributes;
     attributes.value = await window.api.attribute.list(character.value.system_id) || [];
   } catch (error) {

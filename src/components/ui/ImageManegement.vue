@@ -116,11 +116,13 @@ const closePopup = () => {
 
 const selectImageFile = async () => {
   img.value = await window.api.images.select();
+  emit("update:img", img.value);
   closePopup();
 };
 
 const handleFileSelect = async () => {
   img.value = await window.api.images.select();
+  emit("update:img", img.value);
 };
 
 
