@@ -5,11 +5,11 @@ ipcMain.handle('add-system', async (event, data) => {
   return systemApi.addNewSystem(data);
 });
 
-ipcMain.handle('list-systems', async () => {
+ipcMain.handle('system:list', async () => {
   return systemApi.listAllSystems();
 });
 
-ipcMain.handle('get-system', async (event, id) => {
+ipcMain.handle('system:get', async (event, id) => {
   return systemApi.getSystem(id);
 });
 

@@ -5,9 +5,13 @@ ipcMain.handle('add-attribute', async (event, data) => {
   return attributeApi.addNewAttribute(data);
 });
 
-ipcMain.handle('list-attributes', async () => {
-  return attributeApi.listAllAttributes();
+ipcMain.handle('attribute:list', async (event, systemId) => {
+  return attributeApi.getSystemAttributes(systemId);
 });
+
+// ipcMain.handle('list-attributes', async () => {
+//   return attributeApi.listAllAttributes();
+// });
 
 ipcMain.handle('get-attribute', async (event, id) => {
   return attributeApi.getAttribute(id);
@@ -19,10 +23,6 @@ ipcMain.handle('update-attribute', async (event, id, data) => {
 
 ipcMain.handle('delete-attribute', async (event, id) => {
   return attributeApi.removeAttribute(id);
-});
-
-ipcMain.handle('get-system-attributes', async (event, systemId) => {
-  return attributeApi.getSystemAttributes(systemId);
 });
 
 ipcMain.handle('link-attribute', async (event, attributeId, systemId) => {

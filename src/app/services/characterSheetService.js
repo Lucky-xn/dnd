@@ -11,11 +11,21 @@ export function addCharacterSheet(characterSheet) {
 
 export function getCharacterSheet(characterId) {
   const db = getDB();
-  const stmt = db.prepare(`
-    SELECT * FROM characters_sheet 
-    WHERE character_id = ?
+  const stmtPrincipalInfo = db.prepare(`
+    SELECT c.id, c.system_id, c.image, c.name, c.class, c.race, c.origin, c.alignment, cs.level, c.hp, cs.current_hp FROM characters_sheet cs
+    JOIN characters c ON cs.character_id = c.id
+    WHERE c.id = ?
   `);
-  return stmt.get(characterId);
+
+  const stmtAttributes = db.prepare(`
+    SELECT a.name, a.value FROM character_attributes a
+    JOIN characters_sheet cs ON a.character_sheet_id = cs.id
+    WHERE cs.character_id = ?
+  `);
+
+  const data = [{ 'info': stmtPrincipalInfo.get(characterId), 'attributes': stmtAttributes.all(characterId) }];
+
+  return data;
 }
 
 export function updateCharacterSheet(characterId, characterSheet) {

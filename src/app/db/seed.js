@@ -4,17 +4,17 @@
  */
 export function seedInitialData(db) {
    const seed = db.transaction(() => {
-      const systemCount = db.prepare(`SELECT COUNT(*) as count FROM sistems`).get().count;
+      const systemCount = db.prepare(`SELECT COUNT(*) as count FROM systems`).get().count;
 
       if (systemCount === 0) {
-        const dndSystem = db.prepare(`INSERT INTO sistems (name, description) VALUES (?, ?)`)
+        const dndSystem = db.prepare(`INSERT INTO systems (name, description) VALUES (?, ?)`)
           .run(['Dungeons and Dragons', 'Dnd 5e Edition']);
 
         const dndSystemId = dndSystem.lastInsertRowid;
 
         const attributes = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'];
         const insertAttribute = db.prepare(`INSERT INTO attributes (name) VALUES (?)`);
-        const relateAttribute = db.prepare(`INSERT INTO attributes_rel_sistems (atribute_id, sistem_id) VALUES (?, ?)`);
+        const relateAttribute = db.prepare(`INSERT INTO attributes_rel_systems (attribute_id, system_id) VALUES (?, ?)`);
 
         for (const attr of attributes) {
           const result = insertAttribute.run(attr);
@@ -23,7 +23,7 @@ export function seedInitialData(db) {
 
         const skills = ['Acrobatics', 'Animal Handling', 'Arcana', 'Athletics', 'Deception', 'History', 'Insight', 'Intimidation', 'Investigation', 'Medicine', 'Nature', 'Perception', 'Performance', 'Persuasion', 'Religion', 'Sleight of Hand', 'Stealth', 'Survival'];
         const insertSkill = db.prepare(`INSERT INTO skills (name) VALUES (?)`);
-        const relateSkill = db.prepare(`INSERT INTO skill_rel_sistems (skill_id, sistem_id) VALUES (?, ?)`);
+        const relateSkill = db.prepare(`INSERT INTO skill_rel_systems (skill_id, system_id) VALUES (?, ?)`);
 
         for (const skill of skills) {
           const result = insertSkill.run(skill);

@@ -57,12 +57,12 @@
         </div>
       </div>
 
-      <div
+      <!-- <div
         class="row-start-2 flex flex-col items-center gap-3 bg-neutral-800 border border-neutral-700 rounded-md py-2"
       >
         <span class="font-semibold"> Atributos </span>
         <div
-          v-for="(ability, key) in abilities"
+          v-for="(ability, key) in Attributes"
           :key="key"
           class="w-full text-center px-1"
         >
@@ -76,7 +76,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <AttributeSheet :attributes="attributes"/>
 
       <div
         class="col-start-2 col-span-3 text-sm flex flex-col bg-neutral-800 border border-neutral-700 rounded-md"
@@ -196,18 +198,13 @@ import ImageManegement from "../../components/ui/ImageManegement.vue";
 import LifeMenagement from "../../components/ui/LifeMenagement.vue";
 import ListItems from "../../components/ui/Sheet/ListItems.vue";
 import MenageStats from "../../components/ui/Sheet/MenageStats.vue";
+import AttributeSheet from "../../components/Personagens/AttributeSheet.vue";
 
 const route = useRoute();
-const character = ref(null);
 
-const abilities = {
-  str: { name: "FOR" },
-  dex: { name: "DES" },
-  con: { name: "CON" },
-  int: { name: "INT" },
-  wis: { name: "SAB" },
-  cha: { name: "CAR" },
-};
+const character = ref({});
+const characterAttributes = ref([]);
+const attributes = ref([]);
 
 const skills = [
   { name: "Acrobacia", ability: "dex" },
@@ -242,8 +239,11 @@ const getSkillModifier = (ability) => {
 
 const loadCharacter = async () => {
   try {
-    const characters = await window.api.characters.list();
-    character.value = characters.find((c) => c.id == route.params.id);
+    const result = await window.api.characterSheet.get(route.params.id);
+    console.log("Character loaded:", result);
+    character.value = result.info;
+    characterAttributes.value = result.attributes;
+    attributes.value = await window.api.attributes.list(character.value.system_id);
   } catch (error) {
     console.error("Error loading character:", error);
   }

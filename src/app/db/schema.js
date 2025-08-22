@@ -4,7 +4,7 @@
  */
 export function createSchema(db) {
    const create = db.transaction(() => {
-      db.prepare(`CREATE TABLE IF NOT EXISTS sistems (
+      db.prepare(`CREATE TABLE IF NOT EXISTS systems (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE,
         description TEXT
@@ -15,12 +15,12 @@ export function createSchema(db) {
         name TEXT NOT NULL UNIQUE
       )`).run();
 
-      db.prepare(`CREATE TABLE IF NOT EXISTS attributes_rel_sistems (
-        atribute_id INTEGER,
-        sistem_id INTEGER,
-        PRIMARY KEY (atribute_id, sistem_id),
-        FOREIGN KEY (atribute_id) REFERENCES attributes(id) ON DELETE CASCADE,
-        FOREIGN KEY (sistem_id) REFERENCES sistems(id) ON DELETE CASCADE
+      db.prepare(`CREATE TABLE IF NOT EXISTS attributes_rel_systems (
+        attribute_id INTEGER,
+        system_id INTEGER,
+        PRIMARY KEY (attribute_id, system_id),
+        FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE CASCADE,
+        FOREIGN KEY (system_id) REFERENCES systems(id) ON DELETE CASCADE
       )`).run();
 
       db.prepare(`CREATE TABLE IF NOT EXISTS skills (
@@ -28,12 +28,12 @@ export function createSchema(db) {
         name TEXT NOT NULL UNIQUE
       )`).run();
 
-      db.prepare(`CREATE TABLE IF NOT EXISTS skill_rel_sistems (
+      db.prepare(`CREATE TABLE IF NOT EXISTS skill_rel_systems (
         skill_id INTEGER,
-        sistem_id INTEGER,
-        PRIMARY KEY (skill_id, sistem_id),
+        system_id INTEGER,
+        PRIMARY KEY (skill_id, system_id),
         FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE,
-        FOREIGN KEY (sistem_id) REFERENCES sistems(id) ON DELETE CASCADE
+        FOREIGN KEY (system_id) REFERENCES systems(id) ON DELETE CASCADE
       )`).run();
 
       db.prepare(`CREATE TABLE IF NOT EXISTS itens (
@@ -44,7 +44,7 @@ export function createSchema(db) {
 
       db.prepare(`CREATE TABLE IF NOT EXISTS characters (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          sistem_id INTEGER,
+          system_id INTEGER,
           img TEXT,
           name TEXT,
           race TEXT,
@@ -53,7 +53,7 @@ export function createSchema(db) {
           alignment TEXT,
           hp INTEGER,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (sistem_id) REFERENCES sistems(id) ON DELETE CASCADE
+          FOREIGN KEY (system_id) REFERENCES systems(id) ON DELETE CASCADE
         )`).run();
 
       db.prepare(`CREATE TABLE IF NOT EXISTS characters_attributes (

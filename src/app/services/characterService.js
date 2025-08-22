@@ -104,7 +104,7 @@ export function syncCharacterSkills(characterId, skills) {
 export function getAllCharacters() {
   const db = getDB();
   const stmt = db.prepare(`
-        SELECT c.id, c.name, c.img, c.race, c.class, cs.level, cs.current_hp 
+        SELECT c.id, c.system_id, c.name, c.img, c.race, c.class, cs.level, cs.current_hp 
         FROM characters c
         LEFT JOIN characters_sheet cs ON c.id = cs.character_id
     `);

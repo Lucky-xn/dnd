@@ -3,7 +3,7 @@ import { getDB } from "../db/sqlite.js";
 export function addItem(item) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO itens (name, quantidade) 
+    INSERT INTO items (name, quantidade) 
     VALUES (@name, @quantidade)
   `);
   return stmt.run(item);
@@ -11,20 +11,20 @@ export function addItem(item) {
 
 export function getAllItems() {
   const db = getDB();
-  const stmt = db.prepare(`SELECT * FROM itens`);
+  const stmt = db.prepare(`SELECT * FROM items`);
   return stmt.all();
 }
 
 export function getItemById(id) {
   const db = getDB();
-  const stmt = db.prepare(`SELECT * FROM itens WHERE id = ?`);
+  const stmt = db.prepare(`SELECT * FROM items WHERE id = ?`);
   return stmt.get(id);
 }
 
 export function updateItem(id, item) {
   const db = getDB();
   const stmt = db.prepare(`
-    UPDATE itens 
+    UPDATE items 
     SET name = @name, quantidade = @quantidade 
     WHERE id = @id
   `);
@@ -33,14 +33,14 @@ export function updateItem(id, item) {
 
 export function deleteItem(id) {
   const db = getDB();
-  const stmt = db.prepare(`DELETE FROM itens WHERE id = ?`);
+  const stmt = db.prepare(`DELETE FROM items WHERE id = ?`);
   return stmt.run(id);
 }
 
 export function getCharacterInventory(characterId) {
   const db = getDB();
   const stmt = db.prepare(`
-    SELECT i.* FROM itens i
+    SELECT i.* FROM items i
     INNER JOIN characters_inventory ci ON i.id = ci.item_id
     WHERE ci.character_id = ?
   `);

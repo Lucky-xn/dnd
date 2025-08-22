@@ -41,8 +41,8 @@ export function getAttributesBySystem(systemId) {
   const db = getDB();
   const stmt = db.prepare(`
     SELECT a.* FROM attributes a
-    INNER JOIN attributes_rel_sistems ars ON a.id = ars.atribute_id
-    WHERE ars.sistem_id = ?
+    INNER JOIN attributes_rel_systems ars ON a.id = ars.attribute_id
+    WHERE ars.system_id = ?
   `);
   return stmt.all(systemId);
 }
@@ -50,7 +50,7 @@ export function getAttributesBySystem(systemId) {
 export function linkAttributeToSystem(attributeId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO attributes_rel_sistems (atribute_id, sistem_id) 
+    INSERT INTO attributes_rel_systems (attribute_id, system_id) 
     VALUES (?, ?)
   `);
   return stmt.run(attributeId, systemId);
@@ -59,8 +59,8 @@ export function linkAttributeToSystem(attributeId, systemId) {
 export function unlinkAttributeFromSystem(attributeId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
-    DELETE FROM attributes_rel_sistems 
-    WHERE atribute_id = ? AND sistem_id = ?
+    DELETE FROM attributes_rel_systems
+    WHERE attribute_id = ? AND system_id = ?
   `);
   return stmt.run(attributeId, systemId);
 }

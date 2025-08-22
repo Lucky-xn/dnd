@@ -41,8 +41,8 @@ export function getSkillsBySystem(systemId) {
   const db = getDB();
   const stmt = db.prepare(`
     SELECT s.* FROM skills s
-    INNER JOIN skill_rel_sistems srs ON s.id = srs.skill_id
-    WHERE srs.sistem_id = ?
+    INNER JOIN skill_rel_systems srs ON s.id = srs.skill_id
+    WHERE srs.system_id = ?
   `);
   return stmt.all(systemId);
 }
@@ -50,7 +50,7 @@ export function getSkillsBySystem(systemId) {
 export function linkSkillToSystem(skillId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO skill_rel_sistems (skill_id, sistem_id) 
+    INSERT INTO skill_rel_systems (skill_id, sistem_id) 
     VALUES (?, ?)
   `);
   return stmt.run(skillId, systemId);
@@ -59,7 +59,7 @@ export function linkSkillToSystem(skillId, systemId) {
 export function unlinkSkillFromSystem(skillId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
-    DELETE FROM skill_rel_sistems 
+    DELETE FROM skill_rel_systems 
     WHERE skill_id = ? AND sistem_id = ?
   `);
   return stmt.run(skillId, systemId);

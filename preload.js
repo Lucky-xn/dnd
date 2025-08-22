@@ -26,7 +26,7 @@ const api = {
   },
   attribute: {
     create: (data) => invoke('attribute:create', data),
-    list: () => invoke('attribute:list'),
+    list: (systemId) => invoke('attribute:list', { systemId }),
     get: (id) => invoke('attribute:get', { id }),
     update: (id, data) => invoke('attribute:update', { id, ...data }),
     remove: (id) => invoke('attribute:remove', { id }),
@@ -71,7 +71,6 @@ const api = {
     delete: (path) => invoke('images:delete', { path }),
   }
 }
-
 
 contextBridge.exposeInMainWorld('api', {
   ...api,
