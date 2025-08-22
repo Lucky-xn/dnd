@@ -167,7 +167,7 @@ const rollDice = (sides) => {
 
 const loadCharacters = async () => {
   try {
-    const characters = await window.api.listAllCharacters();
+    const characters = await window.api.characters.list();
     characterCount.value = characters.length;
     recentCharacters.value = characters.slice(0, 3); // Show only first 3
   } catch (error) {

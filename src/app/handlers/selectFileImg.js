@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const DESTINY = path.join(app.getPath('userData'), 'Characters');
 
-ipcMain.handle('select-image', async () => {
+ipcMain.handle('images:select', async () => {
   const result = await dialog.showOpenDialog({
     properties: ['openFile'],
     filters: [
@@ -28,7 +28,7 @@ ipcMain.handle('select-image', async () => {
   return `file://${destiny}`;
 });
 
-ipcMain.handle('delete-image', async (event, filePath) => {
+ipcMain.handle('images:delete', async (event, filePath) => {
   try {
     const actualPath = filePath.startsWith('file://') ? filePath.replace('file://', '') : filePath;
 

@@ -44,13 +44,13 @@ const props = defineProps({
 const img = ref(props.img);
 
 const selectImage = async () => {
-  img.value = await window.api.selectImg();
+  img.value = await window.api.images.select();
   emit("update:img", img.value);
 };
 
 const deleteImage = async (path) => {
   try {
-    await window.api.deleteImg(path);
+    await window.api.images.delete(path);
     img.value = "";
     emit("update:cancel");
   } catch (error) {

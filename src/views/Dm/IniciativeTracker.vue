@@ -172,7 +172,7 @@ const filteredPersons = computed(() => {
 });
 
 const loadCharacters = async () => {
-  allCharacters.value = await window.api.listAllCharacters();
+  allCharacters.value = await window.api.characters.list();
 };
 
 onMounted(async () => {

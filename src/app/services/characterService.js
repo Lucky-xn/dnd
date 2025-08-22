@@ -1,7 +1,7 @@
 import { getDB } from "../db/sqlite.js";
 
 const defaultCharacter = {
-  sistem_id: null,
+  sistem_id: 1,
   img: null,
   name: null,
   race: null,
@@ -104,7 +104,7 @@ export function syncCharacterSkills(characterId, skills) {
 export function getAllCharacters() {
   const db = getDB();
   const stmt = db.prepare(`
-        SELECT c.id, c.name, c.img, c.race, c.class, cs.level, cs.hp 
+        SELECT c.id, c.name, c.img, c.race, c.class, cs.level, cs.current_hp 
         FROM characters c
         LEFT JOIN characters_sheet cs ON c.id = cs.character_id
     `);
