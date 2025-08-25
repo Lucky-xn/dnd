@@ -179,6 +179,7 @@ import ImageManegement from "../../components/ui/ImageManegement.vue";
 import LifeMenagement from "../../components/ui/LifeMenagement.vue";
 import ListItems from "../../components/ui/Sheet/ListItems.vue";
 import MenageStats from "../../components/ui/Sheet/MenageStats.vue";
+import { toNumber } from "lodash-es";
 
 const route = useRoute();
 
@@ -210,7 +211,7 @@ const skills = [
 
 const loadCharacter = async () => {
   try {
-    const result = await window.api.characterSheet.get(route.params.id);
+    const result = await window.api.characterSheet.get(parseInt(route.params.id));
     character.value = result.info;
     characterAttributes.value = result.attributes;
     attributes.value = await window.api.attribute.list(character.value.system_id) || [];
