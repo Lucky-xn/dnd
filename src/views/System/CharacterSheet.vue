@@ -179,7 +179,6 @@ import ImageManegement from "../../components/ui/ImageManegement.vue";
 import LifeMenagement from "../../components/ui/LifeMenagement.vue";
 import ListItems from "../../components/ui/Sheet/ListItems.vue";
 import MenageStats from "../../components/ui/Sheet/MenageStats.vue";
-import { toNumber } from "lodash-es";
 
 const route = useRoute();
 
