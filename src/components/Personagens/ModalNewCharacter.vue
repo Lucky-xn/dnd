@@ -199,7 +199,7 @@ const createCharacter = async () => {
       race: formData.value.race,
       origin: formData.value.origin,
       class: formData.value.characterClass,
-      system: formData.value.systemSelected,
+      system_id: formData.value.systemSelected,
       level: formData.value.level,
       alignment: formData.value.alignment,
     });

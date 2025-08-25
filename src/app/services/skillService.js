@@ -50,7 +50,7 @@ export function getSkillsBySystem(systemId) {
 export function linkSkillToSystem(skillId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO skill_rel_systems (skill_id, sistem_id) 
+    INSERT INTO skill_rel_systems (skill_id, system_id) 
     VALUES (?, ?)
   `);
   return stmt.run(skillId, systemId);
@@ -60,7 +60,7 @@ export function unlinkSkillFromSystem(skillId, systemId) {
   const db = getDB();
   const stmt = db.prepare(`
     DELETE FROM skill_rel_systems 
-    WHERE skill_id = ? AND sistem_id = ?
+    WHERE skill_id = ? AND system_id = ?
   `);
   return stmt.run(skillId, systemId);
 }

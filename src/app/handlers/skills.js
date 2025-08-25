@@ -1,34 +1,51 @@
 import { ipcMain } from "electron";
 import * as skillApi from "../api/skills.js";
+import { createValidatedHandler } from "../utils/ipc.js";
+import { 
+  skillSchema, 
+  idSchema, 
+  systemIdSchema, 
+  linkSkillSchema 
+} from "../validation/schemas.js";
 
-ipcMain.handle('add-skill', async (event, data) => {
-  return skillApi.addNewSkill(data);
-});
+ipcMain.handle('skill:create', createValidatedHandler(
+  async (data) => skillApi.addNewSkill(data),
+  skillSchema
+));
 
-ipcMain.handle('list-skills', async () => {
-  return skillApi.listAllSkills();
-});
+ipcMain.handle('skill:list', createValidatedHandler(
+  async () => skillApi.listAllSkills()
+));
 
-ipcMain.handle('get-skill', async (event, id) => {
-  return skillApi.getSkill(id);
-});
+ipcMain.handle('skill:get', createValidatedHandler(
+  async (payload) => skillApi.getSkill(payload.id),
+  idSchema
+));
 
-ipcMain.handle('update-skill', async (event, id, data) => {
-  return skillApi.updateExistingSkill(id, data);
-});
+ipcMain.handle('skill:update', createValidatedHandler(
+  async (payload) => {
+    const { id, ...data } = payload;
+    return skillApi.updateExistingSkill(id, data);
+  },
+  skillSchema.required({ id: true })
+));
 
-ipcMain.handle('delete-skill', async (event, id) => {
-  return skillApi.removeSkill(id);
-});
+ipcMain.handle('skill:remove', createValidatedHandler(
+  async (payload) => skillApi.removeSkill(payload.id),
+  idSchema
+));
 
-ipcMain.handle('get-system-skills', async (event, systemId) => {
-  return skillApi.getSystemSkills(systemId);
-});
+ipcMain.handle('skill:listBySystem', createValidatedHandler(
+  async (payload) => skillApi.getSystemSkills(payload.systemId),
+  systemIdSchema
+));
 
-ipcMain.handle('link-skill', async (event, skillId, systemId) => {
-  return skillApi.linkSkill(skillId, systemId);
-});
+ipcMain.handle('skill:link', createValidatedHandler(
+  async (payload) => skillApi.linkSkill(payload.skillId, payload.systemId),
+  linkSkillSchema
+));
 
-ipcMain.handle('unlink-skill', async (event, skillId, systemId) => {
-  return skillApi.unlinkSkill(skillId, systemId);
-});
+ipcMain.handle('skill:unlink', createValidatedHandler(
+  async (payload) => skillApi.unlinkSkill(payload.skillId, payload.systemId),
+  linkSkillSchema
+));
