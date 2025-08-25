@@ -18,7 +18,7 @@ export function getCharacterSheet(characterId) {
   `);
 
   const stmtAttributes = db.prepare(`
-    SELECT a2.name, a.value
+    SELECT a2.id, a2.name, a.value
     FROM characters_attributes a
     JOIN attributes a2 ON a.attribute_id = a2.id
     WHERE a.character_id = ?

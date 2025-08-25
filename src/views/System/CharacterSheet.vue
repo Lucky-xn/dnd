@@ -57,7 +57,7 @@
         </div>
       </div>
 
-      <AttributeSheet :default-attributes="attributes" :characters-attributes="character.attributes"/>
+      <AttributeSheet :default-attributes="attributes" :characters-attributes="characterAttributes" @update:attribute="updateAttribute($event)"/>
 
       <div
         class="col-start-2 col-span-3 text-sm flex flex-col bg-neutral-800 border border-neutral-700 rounded-md"
@@ -212,11 +212,20 @@ const loadCharacter = async () => {
   try {
     const result = await window.api.characterSheet.get(route.params.id);
     character.value = result.info;
-    console.log("Character loaded:", character.value);
     characterAttributes.value = result.attributes;
     attributes.value = await window.api.attribute.list(character.value.system_id) || [];
   } catch (error) {
     console.error("Error loading character:", error);
+  }
+};
+
+const updateAttribute = async (attribute) => {
+  try {
+    attribute.character_id = character.value.id;
+    await window.api.characters.manipulateAttributes(attribute);
+    loadCharacter();
+  } catch (error) {
+    console.error("Error updating attributes:", error);
   }
 };
 

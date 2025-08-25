@@ -58,6 +58,7 @@ const api = {
     listInventory: (id) => invoke('characters:listInventory', { id }),
     addItem: (characterId, itemId) => invoke('characters:addItem', { characterId, itemId }),
     removeItem: (characterId, itemId) => invoke('characters:removeItem', { characterId, itemId }),
+    manipulateAttributes: (attributes) => invoke('characters:manipulateAttributes', attributes),
   },
   characterSheet: {
     create: (data) => invoke('characterSheet:create', data),

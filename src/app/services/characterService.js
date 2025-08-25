@@ -13,23 +13,24 @@ const defaultCharacter = {
 };
 
 /**
+ * Desabilitada por enquanto.
  * Função genérica para gerenciar relações N-para-N de um personagem.
  * @param {string} sql - A query SQL a ser executada.
  * @param {Array} items - O array de itens (atributos, perícias, etc.).
  * @param {number} characterId - O ID do personagem.
  */
-function executeRelationTransaction(sql, items, characterId) {
-  const db = getDB();
-  const stmt = db.prepare(sql);
+// function executeRelationTransaction(sql, items, characterId) {
+//   const db = getDB();
+//   const stmt = db.prepare(sql);
 
-  const executeMany = db.transaction((itemList) => {
-    for (const item of itemList) {
-      stmt.run({ ...item, character_id: characterId });
-    }
-  });
+//   const executeMany = db.transaction((itemList) => {
+//     for (const item of itemList) {
+//       stmt.run({ ...item, character_id: characterId });
+//     }
+//   });
 
-  executeMany(items);
-}
+//   executeMany(items);
+// }
 
 export function addCharacter(character) {
   const db = getDB();
@@ -70,14 +71,10 @@ export function deleteCharacter(characterId) {
   stmt.run({ id: characterId });
 }
 
-export function insertAttributes(character) {
-  const sql = `INSERT INTO characters_attributes (character_id, attribute_id, value) VALUES (@character_id, @id, @value)`;
-  executeRelationTransaction(sql, character.attributes, character.id);
-}
-
-export function updateCharacterAttributes(character) {
-  const sql = `UPDATE characters_attributes SET value = @value WHERE character_id = @character_id AND attribute_id = @id`;
-  executeRelationTransaction(sql, character.attributes, character.id);
+export function characterManipulationAttributes(attributes) {
+  const db = getDB();
+  const stmt = db.prepare(`INSERT INTO characters_attributes (character_id, attribute_id, value) VALUES (@character_id, @attribute_id, @value) ON CONFLICT(character_id, attribute_id) DO UPDATE SET value = excluded.value`);
+  stmt.run(attributes);
 }
 
 /**

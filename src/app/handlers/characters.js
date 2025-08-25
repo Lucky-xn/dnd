@@ -8,3 +8,7 @@ ipcMain.handle('characters:create', async (event, data) => {
 ipcMain.handle('characters:list', async () => {
   return characterApi.listAllCharacters();
 });
+
+ipcMain.handle('characters:manipulateAttributes', async (event, character) => {
+  return characterApi.manipulateCharacterAttributes(character);
+});
