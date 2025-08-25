@@ -73,8 +73,37 @@ export function deleteCharacter(characterId) {
 
 export function characterManipulationAttributes(attributes) {
   const db = getDB();
-  const stmt = db.prepare(`INSERT INTO characters_attributes (character_id, attribute_id, value) VALUES (@character_id, @attribute_id, @value) ON CONFLICT(character_id, attribute_id) DO UPDATE SET value = excluded.value`);
-  stmt.run(attributes);
+  
+  // Normalize to array (support both single object and array of objects)
+  const attributesArray = Array.isArray(attributes) ? attributes : [attributes];
+  
+  const stmt = db.prepare(`
+    INSERT INTO characters_attributes (character_id, attribute_id, value) 
+    VALUES (@character_id, @attribute_id, @value) 
+    ON CONFLICT(character_id, attribute_id) DO UPDATE SET value = excluded.value
+  `);
+  
+  // Use transaction for batch operations
+  const transaction = db.transaction((attrs) => {
+    for (const attr of attrs) {
+      // Validate that the attribute belongs to the character's system
+      const validationStmt = db.prepare(`
+        SELECT COUNT(*) as count 
+        FROM attributes_rel_systems ars 
+        INNER JOIN characters c ON c.system_id = ars.system_id 
+        WHERE ars.attribute_id = ? AND c.id = ?
+      `);
+      const { count } = validationStmt.get(attr.attribute_id, attr.character_id);
+      
+      if (count === 0) {
+        throw new Error(`Attribute ${attr.attribute_id} does not belong to character ${attr.character_id}'s system`);
+      }
+      
+      stmt.run(attr);
+    }
+  });
+  
+  return transaction(attributesArray);
 }
 
 /**
@@ -106,4 +135,15 @@ export function getAllCharacters() {
         LEFT JOIN characters_sheet cs ON c.id = cs.character_id
     `);
   return stmt.all();
+}
+
+export function getCharacterById(id) {
+  const db = getDB();
+  const stmt = db.prepare(`
+    SELECT c.*, cs.level, cs.current_hp 
+    FROM characters c
+    LEFT JOIN characters_sheet cs ON c.id = cs.character_id
+    WHERE c.id = ?
+  `);
+  return stmt.get(id);
 }

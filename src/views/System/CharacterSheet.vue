@@ -210,7 +210,7 @@ const skills = [
 
 const loadCharacter = async () => {
   try {
-    const result = await window.api.characterSheet.get(route.params.id);
+    const result = await window.api.characterSheet.get(parseInt(route.params.id));
     character.value = result.info;
     characterAttributes.value = result.attributes;
     attributes.value = await window.api.attribute.list(character.value.system_id) || [];

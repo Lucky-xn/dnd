@@ -1,34 +1,47 @@
 import { ipcMain } from "electron";
 import * as attributeApi from "../api/attributes.js";
+import { createValidatedHandler } from "../utils/ipc.js";
+import { 
+  attributeSchema, 
+  idSchema, 
+  systemIdSchema, 
+  linkAttributeSchema 
+} from "../validation/schemas.js";
 
-ipcMain.handle('add-attribute', async (event, data) => {
-  return attributeApi.addNewAttribute(data);
-});
+ipcMain.handle('attribute:create', createValidatedHandler(
+  async (data) => attributeApi.addNewAttribute(data),
+  attributeSchema
+));
 
-ipcMain.handle('attribute:list', async (event, systemId) => {
-  return attributeApi.getSystemAttributes(systemId);
-});
+ipcMain.handle('attribute:list', createValidatedHandler(
+  async (payload) => attributeApi.getSystemAttributes(payload.systemId),
+  systemIdSchema
+));
 
-// ipcMain.handle('list-attributes', async () => {
-//   return attributeApi.listAllAttributes();
-// });
+ipcMain.handle('attribute:get', createValidatedHandler(
+  async (payload) => attributeApi.getAttribute(payload.id),
+  idSchema
+));
 
-ipcMain.handle('get-attribute', async (event, id) => {
-  return attributeApi.getAttribute(id);
-});
+ipcMain.handle('attribute:update', createValidatedHandler(
+  async (payload) => {
+    const { id, ...data } = payload;
+    return attributeApi.updateExistingAttribute(id, data);
+  },
+  attributeSchema.required({ id: true })
+));
 
-ipcMain.handle('update-attribute', async (event, id, data) => {
-  return attributeApi.updateExistingAttribute(id, data);
-});
+ipcMain.handle('attribute:remove', createValidatedHandler(
+  async (payload) => attributeApi.removeAttribute(payload.id),
+  idSchema
+));
 
-ipcMain.handle('delete-attribute', async (event, id) => {
-  return attributeApi.removeAttribute(id);
-});
+ipcMain.handle('attribute:link', createValidatedHandler(
+  async (payload) => attributeApi.linkAttribute(payload.attributeId, payload.systemId),
+  linkAttributeSchema
+));
 
-ipcMain.handle('link-attribute', async (event, attributeId, systemId) => {
-  return attributeApi.linkAttribute(attributeId, systemId);
-});
-
-ipcMain.handle('unlink-attribute', async (event, attributeId, systemId) => {
-  return attributeApi.unlinkAttribute(attributeId, systemId);
-});
+ipcMain.handle('attribute:unlink', createValidatedHandler(
+  async (payload) => attributeApi.unlinkAttribute(payload.attributeId, payload.systemId),
+  linkAttributeSchema
+));

@@ -9,7 +9,7 @@
         placeholder="ex:. D&D 5E" 
         required
       >
-        <option v-for="sys in systems" :key="sys.id" :value="sys.name">{{ sys.name }}</option>
+        <option v-for="sys in systems" :key="sys.id" :value="sys.id">{{ sys.name }}</option>
       </select>
     </div>
     

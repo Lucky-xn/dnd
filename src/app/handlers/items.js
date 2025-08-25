@@ -1,34 +1,51 @@
 import { ipcMain } from "electron";
 import * as itemApi from "../api/items.js";
+import { createValidatedHandler } from "../utils/ipc.js";
+import { 
+  itemSchema, 
+  idSchema, 
+  characterIdSchema, 
+  inventorySchema 
+} from "../validation/schemas.js";
 
-ipcMain.handle('add-item', async (event, data) => {
-  return itemApi.addNewItem(data);
-});
+ipcMain.handle('items:create', createValidatedHandler(
+  async (data) => itemApi.addNewItem(data),
+  itemSchema
+));
 
-ipcMain.handle('list-items', async () => {
-  return itemApi.listAllItems();
-});
+ipcMain.handle('items:list', createValidatedHandler(
+  async () => itemApi.listAllItems()
+));
 
-ipcMain.handle('get-item', async (event, id) => {
-  return itemApi.getItem(id);
-});
+ipcMain.handle('items:get', createValidatedHandler(
+  async (payload) => itemApi.getItem(payload.id),
+  idSchema
+));
 
-ipcMain.handle('update-item', async (event, id, data) => {
-  return itemApi.updateExistingItem(id, data);
-});
+ipcMain.handle('items:update', createValidatedHandler(
+  async (payload) => {
+    const { id, ...data } = payload;
+    return itemApi.updateExistingItem(id, data);
+  },
+  itemSchema.required({ id: true })
+));
 
-ipcMain.handle('delete-item', async (event, id) => {
-  return itemApi.removeItem(id);
-});
+ipcMain.handle('items:remove', createValidatedHandler(
+  async (payload) => itemApi.removeItem(payload.id),
+  idSchema
+));
 
-ipcMain.handle('get-inventory', async (event, characterId) => {
-  return itemApi.getInventory(characterId);
-});
+ipcMain.handle('characters:listInventory', createValidatedHandler(
+  async (payload) => itemApi.getInventory(payload.characterId),
+  characterIdSchema
+));
 
-ipcMain.handle('add-to-inventory', async (event, characterId, itemId) => {
-  return itemApi.addToInventory(characterId, itemId);
-});
+ipcMain.handle('characters:addItem', createValidatedHandler(
+  async (payload) => itemApi.addToInventory(payload.characterId, payload.itemId),
+  inventorySchema
+));
 
-ipcMain.handle('remove-from-inventory', async (event, characterId, itemId) => {
-  return itemApi.removeFromInventory(characterId, itemId);
-});
+ipcMain.handle('characters:removeItem', createValidatedHandler(
+  async (payload) => itemApi.removeFromInventory(payload.characterId, payload.itemId),
+  inventorySchema
+));

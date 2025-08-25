@@ -3,8 +3,8 @@ import { getDB } from "../db/sqlite.js";
 export function addItem(item) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT INTO items (name, quantidade) 
-    VALUES (@name, @quantidade)
+    INSERT INTO items (name, quantity) 
+    VALUES (@name, @quantity)
   `);
   return stmt.run(item);
 }
@@ -25,7 +25,7 @@ export function updateItem(id, item) {
   const db = getDB();
   const stmt = db.prepare(`
     UPDATE items 
-    SET name = @name, quantidade = @quantidade 
+    SET name = @name, quantity = @quantity 
     WHERE id = @id
   `);
   return stmt.run({ ...item, id });
